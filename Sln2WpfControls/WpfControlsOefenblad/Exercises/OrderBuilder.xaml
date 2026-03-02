@@ -44,13 +44,13 @@
                         <RadioButton GroupName="Leveringen" Content="Ter plaatse" Margin="5" Name="rbnPlaatse"/>
                     </StackPanel>
                     <WrapPanel HorizontalAlignment="Center">
-                        <Button Content="Bevestigen" Width="50" Margin="5" Name="btnBevestig" Click="btnBevestig_Click" Padding="4"/>
-                        <Button Content="Reset" Margin="5" Width="50" Name="btnReset"/>
+                        <Button Content="Bevestigen" Width="50" Margin="5" Name="btnBevestig" Click="BtnBevestig_Click" Padding="4"/>
+                        <Button Content="Reset" Margin="5" Width="50" Name="btnReset" Click="btnReset_Click_1"/>
                     </WrapPanel>
                 </StackPanel>
                 <StackPanel Grid.Column="2" Margin="10" Orientation="Vertical">
                     <TextBlock FontSize="16" FontWeight="SemiBold" Text="Samenvatting" TextAlignment="Center"/>
-                    <TextBlock Text="..." FontSize="16"/>
+                    <TextBlock Text="..." FontSize="16" Name="txtSamenvatting"/>
                 </StackPanel>
             </Grid>
 

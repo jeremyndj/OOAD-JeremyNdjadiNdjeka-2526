@@ -13,5 +13,10 @@ namespace WpfControlsOefenblad.Exercises
         {
             InitializeComponent();
         }
+
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            txtVolume.Text = $"Volume: {sldWidth.Value}%";
+        }
     }
 }

@@ -17,8 +17,8 @@
         <Border Background="White" Grid.Row="1">
             <!-- HIERONDER BEGINT XAML VAN DE OEFENING -->
             <StackPanel Margin="40,30,40,30" x:Name="stpVolumeControl" MaxWidth="500">
-                <TextBlock FontSize="20" FontWeight="SemiBold" Text="Volume: 40%" Margin="0,10"/>
-
+                <TextBlock FontSize="20" FontWeight="SemiBold" Text="Volume: 40%" Margin="0,10" Name="txtVolume"/>
+                <Slider Name="sldWidth" Width="150" ValueChanged="Slider_ValueChanged" Minimum="0" Maximum="100"/>
                 <Border Height="20" Background="Orange" Width="200" HorizontalAlignment="Left" CornerRadius="5" Margin="0,10"/>
             </StackPanel>
         </Border>

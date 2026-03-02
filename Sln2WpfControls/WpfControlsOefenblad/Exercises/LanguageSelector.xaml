@@ -16,6 +16,15 @@
         <Frame x:Name="fraAssignment" Grid.Row="0" />
         <Border Background="White" Grid.Row="1">
             <!-- HIERONDER BEGINT XAML VAN DE OEFENING -->
+            <StackPanel>
+                <ComboBox x:Name="cbxTaal" Width="120" Margin="5">
+                    <ComboBoxItem Content="Kies een taal..." FontWeight="SemiBold" IsSelected="True"/>
+                    <ComboBoxItem Content="Nederlands"/>
+                    <ComboBoxItem Content="English"/>
+                    <ComboBoxItem Content="Français"/>
+                </ComboBox>
+                <TextBlock Name="txtBegroeting" FontSize="16" FontWeight="SemiBold"/>
+            </StackPanel>
 
         </Border>
     </Grid>
