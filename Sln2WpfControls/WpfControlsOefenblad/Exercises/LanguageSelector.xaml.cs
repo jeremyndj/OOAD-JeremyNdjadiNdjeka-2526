@@ -10,6 +10,7 @@ public partial class LanguageSelector : Page
 {
     public LanguageSelector()
     {
+        InitializeComponent();
         cbxTaal.SelectedIndex = 0;
 
         string[] languages = { "Nederlands", "English", "Français" };
