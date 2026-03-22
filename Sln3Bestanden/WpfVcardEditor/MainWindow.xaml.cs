@@ -194,7 +194,7 @@ namespace WpfVcardEditor
 
             btnSave.IsEnabled = true;
 
-            MessageBox.Show("vCard ingelezen (alleen Persoonlijk-tabblad).",
+            MessageBox.Show("vCard ingelezen",
                             "Klaar", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
@@ -315,6 +315,7 @@ namespace WpfVcardEditor
             rbnMan.IsChecked = false;
             rbnOnbekend.IsChecked = false;
             isModified = false;
+            btnSave.IsEnabled = false;
         }
     }
 }

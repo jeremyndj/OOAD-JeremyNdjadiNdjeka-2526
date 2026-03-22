@@ -72,11 +72,13 @@
 
                     <Label Grid.Row="7" Grid.Column="0" Content="Foto" VerticalAlignment="Center" Margin="5"/>
                     <StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal">
-                        <Button x:Name="btnFoto" Content="SELECTEER..." HorizontalAlignment="Left" Margin="3"/>
+                        <Button x:Name="btnSelecteer" Content="SELECTEER..." HorizontalAlignment="Left" Margin="3"/>
                         <TextBlock x:Name="txtFoto" Margin="3" Text="(geen geselecteerd)"/>
                     </StackPanel>
 
-                    <Border Grid.Row="8" Grid.Column="1" Width="150" Height="100" HorizontalAlignment="Left" BorderThickness="3"></Border>
+                    <Border Grid.Row="8" Grid.Column="1" Width="150" Height="100" HorizontalAlignment="Left" BorderThickness="3">
+                        <Image x:Name="imgFoto"/>
+                    </Border>
 
                 </Grid>
             </TabItem>
