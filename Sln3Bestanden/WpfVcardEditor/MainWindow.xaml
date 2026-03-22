@@ -9,7 +9,7 @@
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_vCard">
-                <MenuItem Header="_New" />
+                <MenuItem Header="_New" x:Name="btnNew" Click="btnNew_Click"/>
                 <MenuItem Header="_Open..." Click="btnOpen_Click"/>
                 <MenuItem Header="_Save" Name="btnSave" Click="SaveAsMenuItem_Click"/>
                 <MenuItem Header="Save _As..." Name="btnSaveAs" Click="SaveAsMenuItem_Click"/>

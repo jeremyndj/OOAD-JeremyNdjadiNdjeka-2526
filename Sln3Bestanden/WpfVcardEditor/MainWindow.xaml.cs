@@ -24,9 +24,31 @@ namespace WpfVcardEditor
         {
             InitializeComponent();
             btnSave.IsEnabled = false;
+
+            //Alle variabelen worden in de AI hulpmethode Card_Changed gedaan
+            txtVoornaam.TextChanged += Card_Changed;
+            txtAchternaam.TextChanged += Card_Changed;
+            txtPrvEmail.TextChanged += Card_Changed;
+            txtPrvTelefoon.TextChanged += Card_Changed;
+            datGeboorte.SelectedDateChanged += Card_Changed;
+            rbnMan.Checked += Card_Changed;
+            rbnVrouw.Checked += Card_Changed;
+            rbnOnbekend.Checked += Card_Changed;
+
+            isModified = false;
+
         }
 
         private string huidigBestandPad = null;
+        private bool isModified = false;
+
+        private void Card_Changed(object sender, EventArgs e) //Methode gemaakt met behulp van AI
+        {
+            if (!isModified)
+            {
+                isModified = true;
+            }
+        }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
@@ -176,15 +198,13 @@ namespace WpfVcardEditor
                             "Klaar", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        private List<string> GenereerVCardInhoud()
+        private List<string> GenereerVCardInhoud()// Dit is een methode met behulp van AI
         {
             List<string> regels = new List<string>();
 
-            // Eerst de verplichte beginregels
             regels.Add("BEGIN:VCARD");
             regels.Add("VERSION:3.0");
 
-            // Volledige naam (FN) - alleen als er een naam is ingevuld
             string volledigeNaam = txtVoornaam.Text.Trim() + " " + txtAchternaam.Text.Trim();
             volledigeNaam = volledigeNaam.Trim();
             if (volledigeNaam != "")
@@ -192,19 +212,16 @@ namespace WpfVcardEditor
                 regels.Add("FN:" + volledigeNaam);
             }
 
-            // Naam componenten (N) - altijd aanwezig, anders is de vCard ongeldig
             string achternaam = txtAchternaam.Text.Trim();
             string voornaam = txtVoornaam.Text.Trim();
             regels.Add("N:" + achternaam + ";" + voornaam + ";;;");
 
-            // Geboortedatum (BDAY) - alleen als er een datum is gekozen
             if (datGeboorte.SelectedDate.HasValue)
             {
                 string geboorteDatum = datGeboorte.SelectedDate.Value.ToString("yyyyMMdd");
                 regels.Add("BDAY:" + geboorteDatum);
             }
 
-            // Geslacht (GENDER) - alleen als man of vrouw is aangevinkt
             if (rbnMan.IsChecked == true)
             {
                 regels.Add("GENDER:M");
@@ -213,23 +230,19 @@ namespace WpfVcardEditor
             {
                 regels.Add("GENDER:F");
             }
-            // Als 'onbekend' is gekozen, voegen we geen GENDER regel toe
 
-            // E-mail (EMAIL) - alleen als er een e-mailadres is ingevuld
             string email = txtPrvEmail.Text.Trim();
             if (email != "")
             {
                 regels.Add("EMAIL;HOME:" + email);
             }
 
-            // Telefoon (TEL) - alleen als er een telefoonnummer is ingevuld
             string telefoon = txtPrvTelefoon.Text.Trim();
             if (telefoon != "")
             {
                 regels.Add("TEL;HOME;VOICE:" + telefoon);
             }
 
-            // Afsluiten
             regels.Add("END:VCARD");
 
             return regels;
@@ -241,7 +254,7 @@ namespace WpfVcardEditor
             File.WriteAllLines(filePath, content, Encoding.UTF8);
         }
 
-        private void SaveAsMenuItem_Click(object sender, RoutedEventArgs e)
+        private void SaveAsMenuItem_Click(object sender, RoutedEventArgs e)// Gemaakt met behulp van AI
         {
             SaveFileDialog dialoog = new SaveFileDialog();
             dialoog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -258,7 +271,6 @@ namespace WpfVcardEditor
                     huidigBestandPad = bestandPad;
                     btnSave.IsEnabled = true; // Save knop activeren
                     txtHuidigeKaart.Text = $"huidige kaart: {System.IO.Path.GetFileName(bestandPad)}";
-                    // Geen melding (zoals gevraagd)
                 }
                 catch (Exception ex)
                 {
@@ -267,7 +279,7 @@ namespace WpfVcardEditor
             }
         }
 
-        private void SaveMenuItem_Click(object sender, RoutedEventArgs e) //AI-methode
+        private void SaveMenuItem_Click(object sender, RoutedEventArgs e) //Gemaakt met behulp van AI (het is gelinkt aan de vorige methode)
         {
             if (huidigBestandPad != null)
             {
@@ -287,10 +299,22 @@ namespace WpfVcardEditor
             }
         }
 
-        // 6. Vervang de bestaande btnSave_Click door deze:
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
             SaveMenuItem_Click(sender, e);
+        }
+
+        private void btnNew_Click(object sender, RoutedEventArgs e)
+        {
+            txtVoornaam.Text = string.Empty;
+            txtAchternaam.Text = string.Empty;
+            datGeboorte.SelectedDate = null;
+            txtPrvEmail.Text = string.Empty;
+            txtPrvTelefoon.Text = string.Empty;
+            rbnVrouw.IsChecked = false;
+            rbnMan.IsChecked = false;
+            rbnOnbekend.IsChecked = false;
+            isModified = false;
         }
     }
 }
