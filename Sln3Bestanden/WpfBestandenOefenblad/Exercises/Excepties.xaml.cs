@@ -17,6 +17,7 @@ public partial class Excepties : Page
 
     private void CmbFolders_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
+        if (cmbFolders == null) return;
         // clear all
         lstBestanden.Items.Clear();
         txtBestandInfo.Text = "";
