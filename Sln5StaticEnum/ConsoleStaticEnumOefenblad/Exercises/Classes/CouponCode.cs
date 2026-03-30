@@ -38,5 +38,18 @@ namespace ConsoleStaticEnumOefenblad.Exercises.Classes
         { 
             return Regex.IsMatch(code, _couponRegex);
         }
+
+        public static string Beschrijf(string code)
+        {
+            if (ControleerCode(code) == false)
+            {
+                return "ongeldige code";
+            }
+            string prefix = code.Substring(0,3);
+            string nummer = code.Substring(3,2);
+            string regio = code.Substring(6,2);
+
+            return $"Prefix={prefix}, Nummer={nummer}, Regio={regio}";
+        }
     }
 }

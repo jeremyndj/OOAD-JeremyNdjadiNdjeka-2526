@@ -28,19 +28,19 @@ internal class Ex04EersteEnum
 
         // Tescode (haal uit commentaar):
 
-        //Bestelling b1 = new Bestelling
-        //{
-        //    KlantNaam = "Sara",
-        //    ProductNaam = "Laptop",
-        //    Status = BestelStatus.Nieuw
-        //};
-        //Bestelling b2 = new Bestelling
-        //{
-        //    KlantNaam = "Imran",
-        //    ProductNaam = "Muis",
-        //    Status = BestelStatus.Verzonden
-        //};
-        //Console.WriteLine(b1);
-        //Console.WriteLine(b2);
+        Bestelling b1 = new Bestelling
+        {
+            KlantNaam = "Sara",
+            ProductNaam = "Laptop",
+            Status = BestelStatus.Nieuw
+        };
+        Bestelling b2 = new Bestelling
+        {
+            KlantNaam = "Imran",
+            ProductNaam = "Muis",
+            Status = BestelStatus.Verzonden
+        };
+        Console.WriteLine(b1);
+        Console.WriteLine(b2);
     }
 }
