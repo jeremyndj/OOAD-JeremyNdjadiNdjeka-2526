@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="ConsoleStaticEnumOefenblad/ConsoleStaticEnumOefenblad.csproj" />
+  <Project Path="WpfEscapeGame/WpfEscapeGame.csproj" Id="3f2f893c-14de-4fd8-9f4e-f9304d6a0cc9" />
 </Solution>
