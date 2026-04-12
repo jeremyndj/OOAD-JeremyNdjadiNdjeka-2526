@@ -47,6 +47,7 @@ namespace WpfEscapeGame
                 Name = "locker",
                 Description = "A locker. I wonder what's inside."
             };
+            locker.IsPortable = false;
             locker.HiddenItem = key2;
             locker.IsLocked = true;
             locker.Key = key1;
@@ -55,7 +56,19 @@ namespace WpfEscapeGame
                 Name = "bed",
                 Description = "Just a bed. I am not tired now."
             };
+            bed.IsPortable = false;
             bed.HiddenItem = key1;
+            Item chair = new Item()
+            {
+                Name = "chair",
+                Description = "A chair. Weird to have that here"
+            };
+            chair.IsPortable = false;
+            Item poster = new Item()
+            {
+                Name = "poster",
+                Description = "Intresting wall decoration"
+            };
 
             // setup bedroom
             room1.Items.Add(new Item()
@@ -124,7 +137,7 @@ namespace WpfEscapeGame
             // 2. item doesn't fit
             if (roomItem.Key != myItem)
             {
-                txtMessage.Text = "That doesn't seem to work. ";
+                txtMessage.Text = RandomMessageGenerator.GetRandomMessage(Enums.MessageType.PastNiet);
                 return;
             }
             // 3. item fits; other item unlocked
@@ -145,5 +158,15 @@ namespace WpfEscapeGame
             currentRoom.Items.Remove(selItem);
         }
 
+        private void BtnDrop_Click(object sender, RoutedEventArgs e)
+        {
+            // 1. find selected item
+            Item selItem = (Item)lstRoomItems.SelectedItem;
+            // 2. add item to your items list
+            txtMessage.Text = $"I just dropped the {selItem.Name}. ";
+            lstMyItems.Items.Remove(selItem);
+            lstRoomItems.Items.Add(selItem);
+            currentRoom.Items.Add(selItem);
+        }
     }
 }

@@ -17,5 +17,6 @@ namespace WpfEscapeGame.Classes
         {
             return Name;
         }
+        public bool IsPortable {  get; set; }
     }
 }

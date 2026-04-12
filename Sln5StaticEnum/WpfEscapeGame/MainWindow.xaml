@@ -26,6 +26,7 @@
             <Button x:Name="btnCheck" Content="&lt;- CHECK" Height="35" Margin="5" Width="160" IsEnabled="False" Click="BtnCheck_Click" />
             <Button x:Name="btnPickUp" Content="PICK UP &gt;&gt;" Height="35" Margin="5" Width="160" IsEnabled="False" Click="BtnPickUp_Click"/>
             <Button x:Name="btnUseOn" Content="&lt;- USE ON -&gt;" Height="35" Margin="5" Width="160" IsEnabled="False" Click="BtnUseOn_Click"/>
+            <Button x:Name="btnDrop" Content="&lt;&lt; DROP;" Height="35" Margin="5" Width="160" IsEnabled="False" Click="BtnDrop_Click"/>
         </StackPanel>
         <TextBlock Text="Picked up items" Grid.Row="2" Grid.Column="2" Margin="20,10" VerticalAlignment="Top" />
         <ListBox x:Name="lstMyItems" Grid.Row="2" Grid.Column="2" Margin="20, 40, 20, 30" SelectionChanged="LstItems_SelectionChanged"/>
