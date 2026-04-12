@@ -30,6 +30,24 @@ namespace WpfEscapeGame
                 Name = "bedroom",
                 Description = "I seem to be in a medium sized bedroom.There is a locker to the left, a nice rug on the floor, and a bed to the right. "
             };
+            Room room2 = new Room()
+            {
+                Name = "living room",
+                Description = "I seem to be in the living room. Very intresting."
+            };
+            // room2.Items.Add(door1);
+            Room room3 = new Room()
+            {
+                Name = "computer room",
+                Description = "I seem to be in the computer room. Let's look around."
+            };
+
+            Doors door1 = new Doors()
+            {
+                Name = "green door",
+                Description = "What a bright coloured door. Lets look what's behind it."
+            };
+            door1.ToRoom = room2;
             // define items
             Item key1 = new Item()
             {
