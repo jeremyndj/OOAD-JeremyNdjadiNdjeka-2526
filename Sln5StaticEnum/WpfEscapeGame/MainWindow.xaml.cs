@@ -102,10 +102,10 @@ namespace WpfEscapeGame
             };
 
             // Doors
-            Doors door1 = new Doors()
+            Doors door2 = new Doors()
             {
-                Name = "green door",
-                Description = "A green door. What a vivid color for a door."
+                Name = "white door",
+                Description = "A white door. What a bland color for a door."
             };
 
             // setup bedroom
