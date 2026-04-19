@@ -11,6 +11,6 @@ namespace WpfEscapeGame.Classes
         public string Name { get; set; }
         public string Description { get; set; }
         public List<Item> Items { get; set; } = new List<Item>();
-        public Door ToDoor { get; set; }
+        public Doors ToDoor { get; set; }
     }
 }
