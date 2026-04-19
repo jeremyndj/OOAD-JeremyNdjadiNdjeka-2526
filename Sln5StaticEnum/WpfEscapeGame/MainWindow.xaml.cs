@@ -35,7 +35,7 @@ namespace WpfEscapeGame
                 Name = "living room",
                 Description = "I seem to be in the living room. Very intresting."
             };
-            // room2.Items.Add(door1);
+    
             Room room3 = new Room()
             {
                 Name = "computer room",
@@ -86,6 +86,26 @@ namespace WpfEscapeGame
             {
                 Name = "poster",
                 Description = "Intresting wall decoration"
+            };
+
+            Item television = new Item()
+            {
+                Name = "television",
+                Description = "This must've been expensive"
+            };
+            television.IsPortable = false;
+
+            Item bin = new Item()
+            {
+                Name = "bin",
+                Description = "Trash recycling is very important"
+            };
+
+            // Doors
+            Doors door1 = new Doors()
+            {
+                Name = "green door",
+                Description = "A green door. What a vivid color for a door."
             };
 
             // setup bedroom

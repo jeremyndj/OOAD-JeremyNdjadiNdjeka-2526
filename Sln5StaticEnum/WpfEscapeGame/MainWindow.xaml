@@ -16,7 +16,6 @@
             <RowDefinition Height="100" />
             <RowDefinition Height="70" />
             <RowDefinition Height="240" />
-            <RowDefinition Height="100"/>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <TextBlock x:Name="txtRoomDesc" Grid.ColumnSpan="3" Padding="10" Margin="20,10" TextWrapping="Wrap" FontSize="16" Background="#FFF9F5F5"/>
