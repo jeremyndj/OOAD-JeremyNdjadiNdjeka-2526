@@ -3,5 +3,5 @@
 internal abstract class ValidatieRegel
 {
     public abstract bool IsGeldig(string waarde);
-    public abstract string FoutBoodschap { get; set; }
+    public abstract string FoutBoodschap { get; }
 }

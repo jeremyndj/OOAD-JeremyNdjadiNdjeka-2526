@@ -2,7 +2,12 @@
 
 internal class BevatHoofdletterRegel : ValidatieRegel
 {
-    public bool IsGeldig(string waarde) => waarde.Any(char.IsUpper);
+    public override bool IsGeldig(string waarde)
+    {
+        if (string.IsNullOrEmpty(waarde))
+            return false;
 
-    public string FoutBoodschap => "Waarde moet minstens één hoofdletter bevatten.";
+        return waarde.Any(char.IsUpper);
+    }
+    public override string FoutBoodschap => "Waarde moet minstens één hoofdletter bevatten.";
 }
