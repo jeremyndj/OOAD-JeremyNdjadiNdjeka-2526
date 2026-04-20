@@ -29,12 +29,13 @@
             <Button x:Name="btnDrop" Content="&lt;&lt; DROP;" Height="35" Margin="5" Width="160" IsEnabled="False" Click="BtnDrop_Click"/>
         </StackPanel>
         <TextBlock Text="Room doors" Grid.Row="3" Margin="20, 10"/>
-        <ListBox x:Name="lstRoomDoors" Grid.Row="3" Margin="20, 40, 20, 30" SelectionChanged="LstItems_SelectionChanged"/>
+        <ListBox x:Name="lstRoomDoors" Grid.Row="3" Margin="20, 40, 20, 30" SelectionChanged="LstDoors_SelectionChanged"/>
         <StackPanel Grid.Row="3" Grid.Column="1" Margin="10, 35, 10, 10" VerticalAlignment="Top">
             <Button x:Name="btnOpenWith" Content="&lt;- OPEN WITH -&gt;" Height="35" Margin="5" Width="160" IsEnabled="False" Click="BtnOpenWith_Click" />
             <Button x:Name="btnEnter" Content="&lt;- ENTER ;" Height="35" Margin="5" Width="160" IsEnabled="False" Click="BtnEnter_Click"/>
         </StackPanel>
         <TextBlock Text="Picked up items" Grid.Row="2" Grid.Column="2" Margin="20,10" VerticalAlignment="Top" />
         <ListBox x:Name="lstMyItems" Grid.Row="2" Grid.Column="2" Margin="20, 40, 20, 30" SelectionChanged="LstItems_SelectionChanged"/>
+        <Image x:Name="imgRoom" Grid.Row="3" Grid.Column="2" Margin="20, 10"/>
     </Grid>
 </Window>

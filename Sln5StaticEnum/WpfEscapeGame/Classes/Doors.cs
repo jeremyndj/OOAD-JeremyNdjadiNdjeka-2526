@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace WpfEscapeGame.Classes
 {
-    internal class Doors
+    internal class Doors : Actor
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public bool IsOpen { get; set; }
-        public bool KeyFits { get; set; }
+        public bool IsLocked { get; set; }
+        public Item Key { get; set; }
         public Room ToRoom { get; set; }
+        
     }
 }
