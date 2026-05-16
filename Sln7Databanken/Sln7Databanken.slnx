@@ -1,1 +1,5 @@
-<Solution />
+<Solution>
+  <Project Path="ClassLibrary/ClassLibrary.csproj" Id="a3be3f80-cbc6-4f16-a150-e6d15c37388a" />
+  <Project Path="WpfDokter/WpfDokter.csproj" Id="ef2e474c-2b5f-4fa8-b496-96a1f3074e61" />
+  <Project Path="WpfPatiënt/WpfPatiënt.csproj" Id="01f5bb56-af57-4624-9bd1-6bc49f84b55f" />
+</Solution>

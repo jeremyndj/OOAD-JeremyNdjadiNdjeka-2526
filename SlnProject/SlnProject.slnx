@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="WpfDokter/WpfDokter.csproj" />
+  <Project Path="WpfPatiënt/WpfPatiënt.csproj" />
+  <Project Path="CLDokterspraktijk/CLDokterspraktijk.csproj" />
+</Solution>
