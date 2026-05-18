@@ -1,0 +1,11 @@
+<Page x:Class="WpfPatiënt.Views.ProfielPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Profiel">
+    <!-- Placeholder; profiel bewerken komt later -->
+    <Grid Margin="16">
+        <TextBlock Text="Profiel"
+                   FontSize="20"
+                   FontWeight="SemiBold"/>
+    </Grid>
+</Page>

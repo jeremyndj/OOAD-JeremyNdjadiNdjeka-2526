@@ -1,0 +1,63 @@
+<Page x:Class="WpfDokter.Views.PatientDetailPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Patiënt — details"
+      Loaded="Page_Loaded">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Button Grid.Row="0"
+                Content="← Terug naar overzicht"
+                HorizontalAlignment="Left"
+                Margin="0,0,0,16"
+                Padding="12,6"
+                Click="BtnTerug_Click"/>
+
+        <TextBlock x:Name="txtTitel"
+                   Grid.Row="1"
+                   Text="Patiëntdetails"
+                   FontSize="22"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,16"/>
+
+        <Border Grid.Row="2"
+                BorderBrush="#CCCCCC"
+                BorderThickness="1"
+                Background="#FAFAFA"
+                Padding="20"
+                HorizontalAlignment="Left"
+                MinWidth="480">
+            <StackPanel Orientation="Horizontal">
+                <Image x:Name="imgProfiel"
+                       Width="120"
+                       Height="120"
+                       Stretch="UniformToFill"
+                       VerticalAlignment="Top"
+                       Margin="0,0,24,0"/>
+                <StackPanel MinWidth="300">
+                    <TextBlock FontWeight="SemiBold" Margin="0,0,0,4" Text="Naam"/>
+                    <TextBlock x:Name="txtNaam" TextWrapping="Wrap" Margin="0,0,0,12"/>
+
+                    <TextBlock FontWeight="SemiBold" Margin="0,0,0,4" Text="E-mail"/>
+                    <TextBlock x:Name="txtEmail" TextWrapping="Wrap" Margin="0,0,0,12"/>
+
+                    <TextBlock FontWeight="SemiBold" Margin="0,0,0,4" Text="GSM"/>
+                    <TextBlock x:Name="txtGsm" TextWrapping="Wrap" Margin="0,0,0,12"/>
+
+                    <TextBlock FontWeight="SemiBold" Margin="0,0,0,4" Text="Geboortedatum"/>
+                    <TextBlock x:Name="txtGeboortedatum" TextWrapping="Wrap" Margin="0,0,0,12"/>
+
+                    <TextBlock FontWeight="SemiBold" Margin="0,0,0,4" Text="Geslacht"/>
+                    <TextBlock x:Name="txtGeslacht" TextWrapping="Wrap" Margin="0,0,0,12"/>
+
+                    <TextBlock FontWeight="SemiBold" Margin="0,0,0,4" Text="Notificatievoorkeur"/>
+                    <TextBlock x:Name="txtNotificaties" TextWrapping="Wrap"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Page>

@@ -1,0 +1,83 @@
+<Page x:Class="WpfDokter.Views.StartPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Start"
+      Loaded="Page_Loaded">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="16">
+
+            <!-- Koptekst -->
+            <TextBlock x:Name="txtWelkom"
+                       FontSize="24"
+                       FontWeight="SemiBold"
+                       Margin="0,0,0,4"/>
+            <TextBlock Text="Dokterspraktijk — beheer voor dokters"
+                       FontSize="14"
+                       Foreground="#666666"
+                       Margin="0,0,0,24"/>
+
+            <!-- Uitleg over de applicatie -->
+            <TextBlock Text="Over deze applicatie"
+                       FontSize="18"
+                       FontWeight="SemiBold"
+                       Margin="0,0,0,8"/>
+            <Border Background="#FAFAFA"
+                    BorderBrush="#CCCCCC"
+                    BorderThickness="1"
+                    Padding="16"
+                    Margin="0,0,0,24"
+                    CornerRadius="4">
+                <TextBlock TextWrapping="Wrap"
+                           LineHeight="22"
+                           FontSize="14"
+                           Text="Deze applicatie ondersteunt de dagelijkse werking van de dokterspraktijk. Als ingelogde dokter beheert u afspraken en patiëntgegevens via één centraal scherm. De gegevens komen uit de gekoppelde database; wijzigingen worden veilig opgeslagen via de class library."/>
+            </Border>
+
+            <!-- Mogelijkheden voor de dokter -->
+            <TextBlock Text="Wat kunt u doen?"
+                       FontSize="18"
+                       FontWeight="SemiBold"
+                       Margin="0,0,0,8"/>
+            <Border Background="#FAFAFA"
+                    BorderBrush="#CCCCCC"
+                    BorderThickness="1"
+                    Padding="16"
+                    Margin="0,0,0,24"
+                    CornerRadius="4">
+                <StackPanel>
+                    <TextBlock Margin="0,0,0,6"
+                               TextWrapping="Wrap"
+                               FontSize="14"
+                               Text="• Afspraken: alle geplande afspraken bekijken en indien nodig annuleren."/>
+                    <TextBlock Margin="0,0,0,6"
+                               TextWrapping="Wrap"
+                               FontSize="14"
+                               Text="• Patiënten: overzicht van patiënten; nieuwe patiënt toevoegen, bestaande bewerken of verwijderen (met bevestiging)."/>
+                    <TextBlock TextWrapping="Wrap"
+                               FontSize="14"
+                               Text="• Profiel: uw eigen profielgegevens en profielfoto bekijken via de knop rechtsboven."/>
+                    <TextBlock Margin="0,6,0,0"
+                               TextWrapping="Wrap"
+                               FontSize="14"
+                               Text="• Uitloggen: veilig afmelden via het menu links; uw sessie wordt geleegd."/>
+                </StackPanel>
+            </Border>
+
+            <!-- Snelkoppelingen (zelfde als zijmenu) -->
+            <TextBlock Text="Snel naar"
+                       FontSize="16"
+                       FontWeight="SemiBold"
+                       Margin="0,0,0,8"/>
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Afspraken"
+                        Margin="0,0,8,0"
+                        Padding="16,8"
+                        Click="BtnAfspraken_Click"/>
+                <Button Content="Patiënten"
+                        Padding="16,8"
+                        Click="BtnPatienten_Click"/>
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>

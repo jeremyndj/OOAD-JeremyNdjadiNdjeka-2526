@@ -1,5 +1,6 @@
 namespace CLDokterspraktijk.Models;
 
+// Basisgegevens die dokter en patiënt gemeen hebben.
 public abstract class Gebruiker
 {
     public int Id { get; set; }

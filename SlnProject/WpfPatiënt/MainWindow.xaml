@@ -3,10 +3,109 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WpfPatiënt"
         mc:Ignorable="d"
-        Title="Patiënt" Height="450" Width="800">
+        Title="Dokterspraktijk — Patiënt"
+        Height="600"
+        Width="1000"
+        WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="64"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
+        <!-- Header: titel, gebruikersnaam en profielknop -->
+        <Border Grid.Row="0"
+                Grid.ColumnSpan="2"
+                BorderBrush="#CCCCCC"
+                BorderThickness="0,0,0,1"
+                Background="#F5F5F5"
+                Padding="16,8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock x:Name="txtLogo"
+                           Grid.Column="0"
+                           Text="Dokterspraktijk"
+                           FontSize="18"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"/>
+
+                <StackPanel Grid.Column="2"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center">
+                    <TextBlock x:Name="txtGebruikersnaam"
+                               Text="Gebruiker"
+                               VerticalAlignment="Center"
+                               Margin="0,0,12,0"
+                               FontSize="14"/>
+                    <Button x:Name="btnProfiel"
+                            Width="40"
+                            Height="40"
+                            Padding="0"
+                            Click="BtnProfiel_Click">
+                        <Image x:Name="imgProfiel"
+                               Stretch="UniformToFill"/>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Zijmenu: navigatie tussen pages -->
+        <Border Grid.Row="1"
+                Grid.Column="0"
+                BorderBrush="#CCCCCC"
+                BorderThickness="0,0,1,0"
+                Background="#FAFAFA"
+                Padding="8">
+            <StackPanel VerticalAlignment="Top">
+                <Button x:Name="btnStart"
+                        Content="Start"
+                        Margin="0,0,0,8"
+                        Padding="12,8"
+                        HorizontalContentAlignment="Left"
+                        Click="BtnStart_Click"/>
+                <Button x:Name="btnAfspraken"
+                        Content="Mijn afspraken"
+                        Margin="0,0,0,8"
+                        Padding="12,8"
+                        HorizontalContentAlignment="Left"
+                        Click="BtnAfspraken_Click"/>
+                <Button x:Name="btnAfspraakMaken"
+                        Content="Afspraak maken"
+                        Margin="0,0,0,8"
+                        Padding="12,8"
+                        HorizontalContentAlignment="Left"
+                        Click="BtnAfspraakMaken_Click"/>
+                <Button x:Name="btnProfielMenu"
+                        Content="Profiel"
+                        Margin="0,0,0,8"
+                        Padding="12,8"
+                        HorizontalContentAlignment="Left"
+                        Click="BtnProfielMenu_Click"/>
+                <Button x:Name="btnLogout"
+                        Content="Uitloggen"
+                        Margin="0,16,0,0"
+                        Padding="12,8"
+                        HorizontalContentAlignment="Left"
+                        Click="BtnLogout_Click"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Inhoud: hier worden alle pages geladen -->
+        <Frame x:Name="fraMain"
+               Grid.Row="1"
+               Grid.Column="1"
+               NavigationUIVisibility="Hidden"
+               JournalOwnership="OwnsJournal"/>
     </Grid>
 </Window>
