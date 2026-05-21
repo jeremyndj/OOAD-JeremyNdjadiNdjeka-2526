@@ -6,10 +6,17 @@ using CLDokterspraktijk.Services;
 
 namespace WpfDokter.Views;
 
-// Overzicht: contactkaarten met zoekfilter (gegevens uit de database).
+// =============================================================================
+// PatientenPage — overzicht van alle patiënten als contactkaarten
+// =============================================================================
+// Data-flow: txtZoek → PatientService.HaalVoorOverzicht → PatientRepository (SQL LIKE op naam).
+// UI wordt volledig in code opgebouwd (geen ItemsSource/data binding per projectafspraak).
+// Elke kaart heeft drie icoonknoppen; het patiënt-id zit in Button.Tag voor navigatie.
+// =============================================================================
 public partial class PatientenPage : Page
 {
     private readonly PatientService _svcPatient = new PatientService();
+    // Lettertype voor Segoe MDL2-glyphen op detail/wijzig/verwijder-knoppen.
     private readonly FontFamily _fontIconen = new FontFamily("Segoe MDL2 Assets");
 
     public PatientenPage()
@@ -17,17 +24,28 @@ public partial class PatientenPage : Page
         InitializeComponent();
     }
 
+    // -------------------------------------------------------------------------
+    // Page_Loaded — eerste vulling van pnlKaarten (WrapPanel in XAML)
+    // -------------------------------------------------------------------------
     private void Page_Loaded(object sender, RoutedEventArgs e)
     {
         VernieuwKaarten();
     }
 
+    // -------------------------------------------------------------------------
+    // TxtZoek_TextChanged — live filter bij elke toetsaanslag
+    // -------------------------------------------------------------------------
+    // Roept VernieuwKaarten opnieuw aan; lege zoektekst = alle patiënten uit de database.
     private void TxtZoek_TextChanged(object sender, TextChangedEventArgs e)
     {
         VernieuwKaarten();
     }
 
-    // Bouwt de kaarten opnieuw op basis van de zoektekst.
+    // -------------------------------------------------------------------------
+    // VernieuwKaarten — kern: lijst ophalen en kaarten opnieuw tekenen
+    // -------------------------------------------------------------------------
+    // Stappen: Children.Clear → service aanroepen → per Patient MaakContactKaart → toevoegen.
+    // Bij SQL-fout: MessageBox (technische fout laden, geen formulier-validatie).
     private void VernieuwKaarten()
     {
         pnlKaarten.Children.Clear();
@@ -52,6 +70,11 @@ public partial class PatientenPage : Page
         }
     }
 
+    // -------------------------------------------------------------------------
+    // MaakContactKaart — bouwt één visuele kaart (Border + Grid + knoppen)
+    // -------------------------------------------------------------------------
+    // Layout: links profielfoto (2 rijen hoog), rechtsboven naam/e-mail/gsm, rechtsonder actieknoppen.
+    // patient.Id wordt op elke actieknop in Tag gezet (geen closure met discard-parameters).
     private Border MaakContactKaart(Patient patient)
     {
         Border brd = new Border
@@ -124,13 +147,16 @@ public partial class PatientenPage : Page
         int iId = patient.Id;
 
         Button btnDetail = MaakIcoonKnop("\uE946", "Details");
-        btnDetail.Click += (_, _) => NavigationService?.Navigate(new PatientDetailPage(iId));
+        btnDetail.Tag = iId;
+        btnDetail.Click += BtnKaartDetail_Click;
 
         Button btnWijzig = MaakIcoonKnop("\uE70F", "Aanpassen");
-        btnWijzig.Click += (_, _) => NavigationService?.Navigate(new PatientBewerkPage(iId));
+        btnWijzig.Tag = iId;
+        btnWijzig.Click += BtnKaartWijzig_Click;
 
         Button btnVerwijder = MaakIcoonKnop("\uE74D", "Verwijderen");
-        btnVerwijder.Click += (_, _) => NavigationService?.Navigate(new PatientVerwijderPage(iId));
+        btnVerwijder.Tag = iId;
+        btnVerwijder.Click += BtnKaartVerwijder_Click;
 
         pnlKnoppen.Children.Add(btnDetail);
         pnlKnoppen.Children.Add(btnWijzig);
@@ -145,6 +171,7 @@ public partial class PatientenPage : Page
         return brd;
     }
 
+    // Maakt een kleine transparante knop met één MDL2-glyph en tooltip.
     private Button MaakIcoonKnop(string strGlyph, string strTooltip)
     {
         Button btn = new Button
@@ -163,8 +190,53 @@ public partial class PatientenPage : Page
         return btn;
     }
 
-    private void BtnTerugNaarStart_Click(object sender, RoutedEventArgs e)
+    // Leest het integer-id uit de Tag van de aangeklikte knop; 0 = ongeldig (geen navigatie).
+    private int HaalPatientIdUitKnop(object sender)
     {
-        NavigationService?.Navigate(new StartPage());
+        Button? btn = sender as Button;
+        if (btn == null || btn.Tag == null)
+        {
+            return 0;
+        }
+
+        return (int)btn.Tag;
     }
+
+    private void BtnKaartDetail_Click(object sender, RoutedEventArgs e)
+    {
+        int iId = HaalPatientIdUitKnop(sender);
+        if (iId > 0 && NavigationService != null)
+        {
+            NavigationService.Navigate(new PatientDetailPage(iId));
+        }
+    }
+
+    // Opent PatientBewerkPage met id 0 → INSERT in database bij Opslaan.
+    private void BtnNieuwPatient_Click(object sender, RoutedEventArgs e)
+    {
+        if (NavigationService != null)
+        {
+            NavigationService.Navigate(new PatientBewerkPage(0));
+        }
+    }
+
+    private void BtnKaartWijzig_Click(object sender, RoutedEventArgs e)
+    {
+        int iId = HaalPatientIdUitKnop(sender);
+        if (iId > 0 && NavigationService != null)
+        {
+            NavigationService.Navigate(new PatientBewerkPage(iId));
+        }
+    }
+
+    // Opent PatientVerwijderPage met bevestiging en DELETE (inclusief gekoppelde afspraken).
+    private void BtnKaartVerwijder_Click(object sender, RoutedEventArgs e)
+    {
+        int iId = HaalPatientIdUitKnop(sender);
+        if (iId > 0 && NavigationService != null)
+        {
+            NavigationService.Navigate(new PatientVerwijderPage(iId));
+        }
+    }
+
 }

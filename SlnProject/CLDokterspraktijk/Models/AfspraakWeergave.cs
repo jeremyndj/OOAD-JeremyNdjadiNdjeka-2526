@@ -1,6 +1,7 @@
 namespace CLDokterspraktijk.Models;
 
-// Read model: afspraak + patiëntnaam uit JOIN (geen aparte tabel in de database).
+// Model voor de UI: combineert afspraakgegevens met patiëntnaam uit een SQL-JOIN.
+// Geen aparte tabel in de database; alleen een C#-klasse om ListBox-regels te vullen.
 public class AfspraakWeergave
 {
     public int Id { get; set; }
@@ -11,9 +12,12 @@ public class AfspraakWeergave
     public string PatientVoornaam { get; set; }
     public string PatientAchternaam { get; set; }
 
-    public string PatientNaam => PatientVoornaam + " " + PatientAchternaam;
+    public string PatientNaam
+    {
+        get { return PatientVoornaam + " " + PatientAchternaam; }
+    }
 
-    // Bouwt weergave op basis van strikte Afspraak-entiteit + namen uit Patient.
+    // Maakt een weergave-object vanuit de strikte Afspraak-entiteit plus namen uit Patient.
     public static AfspraakWeergave VanAfspraakEnPatient(Afspraak afspraak, string strPatientVoornaam, string strPatientAchternaam)
     {
         return new AfspraakWeergave

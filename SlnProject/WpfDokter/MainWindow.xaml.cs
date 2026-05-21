@@ -4,14 +4,29 @@ using WpfDokter.Views;
 
 namespace WpfDokter;
 
-// Hoofdvenster: zijmenu, header en Frame voor alle dokter-pages (login start in het Frame).
+// =============================================================================
+// MainWindow — shell van de dokter-applicatie
+// =============================================================================
+// Dit venster verandert zelden van inhoud: het Frame (fraMain) toont telkens een andere Page.
+// Links: vast zijmenu (Start, Afspraken, Patiënten, Uitloggen).
+// Boven: header met naam en profielfoto van de ingelogde dokter (Session).
+// Er is bewust geen apart LoginWindow: login is een Page in hetzelfde Frame.
+// =============================================================================
 public partial class MainWindow : Window
 {
+    // Constructor: alleen XAML laden. Navigatie en sessie starten pas in Window_Loaded.
     public MainWindow()
     {
         InitializeComponent();
     }
 
+    // -------------------------------------------------------------------------
+    // Window_Loaded — gekoppeld aan Loaded in MainWindow.xaml
+    // -------------------------------------------------------------------------
+    // Bepaalt het startscherm op basis van Session.GebruikerId:
+    // - 0  → nog niet ingelogd: menu uit, header leeg, LoginPage in fraMain
+    // - >0 → sessie actief (normaal na login): menu aan, header vullen, PatiëntenPage
+    // -------------------------------------------------------------------------
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
         if (Session.GebruikerId == 0)
@@ -28,7 +43,12 @@ public partial class MainWindow : Window
         }
     }
 
-    // Na geslaagde login vanuit LoginPage: knoppen activeren en patiëntenoverzicht openen.
+    // -------------------------------------------------------------------------
+    // NaLogin — publiek, aangeroepen door LoginPage na geslaagde LoginService.Login
+    // -------------------------------------------------------------------------
+    // Zet de UI in dezelfde staat als een opstart met bestaande sessie:
+    // menu klikbaar, header met doktergegevens, standaardnavigatie naar patiëntenoverzicht.
+    // -------------------------------------------------------------------------
     public void NaLogin()
     {
         ZetMenuIngelogd(true);
@@ -36,7 +56,12 @@ public partial class MainWindow : Window
         NavigeerNaarPatienten();
     }
 
-    // Zijmenu- en headerknoppen: uit tot login geslaagd (knoppen blijven zichtbaar).
+    // -------------------------------------------------------------------------
+    // ZetMenuIngelogd — zijmenu + profielknop in header aan/uit
+    // -------------------------------------------------------------------------
+    // IsEnabled = false: knoppen blijven ZICHTBAAR tijdens login (UX-eis), maar niet klikbaar.
+    // IsEnabled = true: normale navigatie na inloggen.
+    // -------------------------------------------------------------------------
     private void ZetMenuIngelogd(bool bIngelogd)
     {
         btnStart.IsEnabled = bIngelogd;
@@ -46,14 +71,20 @@ public partial class MainWindow : Window
         btnProfiel.IsEnabled = bIngelogd;
     }
 
-    // Header zonder ingelogde gebruiker (tijdens login).
+    // -------------------------------------------------------------------------
+    // WisGebruikerInHeader — anonieme header (vóór login / na uitloggen)
+    // -------------------------------------------------------------------------
     private void WisGebruikerInHeader()
     {
         txtGebruikersnaam.Text = "Niet ingelogd";
         ProfielAfbeeldingHelper.LaadProfielAfbeelding(imgProfiel, null);
     }
 
-    // Toont naam en profielfoto uit Session (gevuld bij login).
+    // -------------------------------------------------------------------------
+    // LaadGebruikerInHeader — ingelogde dokter tonen uit Session
+    // -------------------------------------------------------------------------
+    // Session wordt gevuld door Session.VulVanDokter na login (id, naam, profielfoto-bytes).
+    // -------------------------------------------------------------------------
     public void LaadGebruikerInHeader()
     {
         if (!string.IsNullOrEmpty(Session.Gebruikersnaam))
@@ -68,6 +99,10 @@ public partial class MainWindow : Window
         ProfielAfbeeldingHelper.LaadProfielAfbeelding(imgProfiel, Session.ProfielData);
     }
 
+    // -------------------------------------------------------------------------
+    // Navigatie-helpers — elke methode vervangt de huidige Page in fraMain
+    // -------------------------------------------------------------------------
+    // Nieuwe Page-instantie per navigatie (geen cache); geschiedenis via Frame-journal indien nodig.
     private void NavigeerNaarStart()
     {
         fraMain.Navigate(new StartPage());
@@ -88,6 +123,9 @@ public partial class MainWindow : Window
         fraMain.Navigate(new ProfielPage());
     }
 
+    // -------------------------------------------------------------------------
+    // Click-handlers zijmenu en header — delegeren naar Navigeer*-methodes
+    // -------------------------------------------------------------------------
     private void BtnStart_Click(object sender, RoutedEventArgs e)
     {
         NavigeerNaarStart();
@@ -108,7 +146,7 @@ public partial class MainWindow : Window
         NavigeerNaarProfiel();
     }
 
-    // Sessie leeg, menu uitschakelen en loginpagina in het Frame tonen.
+    // Uitloggen: geheugen-sessie wissen en UI terug naar login-scherm (zelfde flow als opstart zonder sessie).
     private void BtnLogout_Click(object sender, RoutedEventArgs e)
     {
         Session.Wis();

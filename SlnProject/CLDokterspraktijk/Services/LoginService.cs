@@ -4,12 +4,13 @@ using CLDokterspraktijk.Security;
 
 namespace CLDokterspraktijk.Services;
 
-// Inloggen van een dokter via e-mail en wachtwoord.
+// Inloggen van een dokter: e-mail opzoeken in de database, wachtwoord hashen en vergelijken.
+// Geen SQL in deze laag — alleen orchestratie boven DokterRepository en PasswordHasher.
 public class LoginService
 {
     private readonly DokterRepository _repoDokter = new DokterRepository();
 
-    // Geeft de dokter terug bij succes, anders null (onbekend e-mail of fout wachtwoord).
+    // Bij succes een Dokter zonder paswoord-hash (veilig voor WPF); bij fout null.
     public Dokter? Login(string strEmail, string strWachtwoord)
     {
         Dokter? dokter = _repoDokter.HaalOpViaEmail(strEmail.Trim());
@@ -18,13 +19,12 @@ public class LoginService
             return null;
         }
 
-        // Wachtwoord hashen en vergelijken met kolom paswoord in de database.
+        // In de database staat alleen de hash; plat wachtwoord wordt hier gehasht en vergeleken.
         if (!PasswordHasher.ControleerWachtwoord(strWachtwoord, dokter.Paswoord))
         {
             return null;
         }
 
-        // Hash niet doorgeven naar WPF.
         dokter.Paswoord = string.Empty;
         return dokter;
     }

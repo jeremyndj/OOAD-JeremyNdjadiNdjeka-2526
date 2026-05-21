@@ -3,10 +3,10 @@ using Microsoft.Data.SqlClient;
 
 namespace CLDokterspraktijk.Data;
 
-// Opent SQL-verbindingen met de connection string uit config.
+// Centrale plek voor databaseverbindingen: leest connStr uit App.config van het startproject (WpfDokter).
+// Elke repository opent hier een SqlConnection; geen connection string hardcoded in SQL-klassen.
 public static class SqlConnectionFactory
 {
-    // Leest connStr uit App.config en maakt een nieuwe SqlConnection.
     public static SqlConnection MaakVerbinding()
     {
         string? strConnection = ConfigurationManager.ConnectionStrings["connStr"]?.ConnectionString;

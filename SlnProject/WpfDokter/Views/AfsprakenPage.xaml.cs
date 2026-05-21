@@ -6,11 +6,20 @@ using CLDokterspraktijk.Services;
 
 namespace WpfDokter.Views;
 
-// Afspraken per dag: kalender, lijst, detail en annuleren.
+// =============================================================================
+// AfsprakenPage — dagoverzicht afspraken van de ingelogde dokter
+// =============================================================================
+// Filter: Session.GebruikerId (dokter_id) + gekozen datum in calDatum.
+// Lijst: handmatig ListBoxItem per afspraak; volledig AfspraakWeergave-object in Tag.
+// Detail: txtDetail + annuleren-knop; annuleren = DELETE in DB na MessageBox-bevestiging.
+// Geen data binding op ItemsSource (projectafspraak).
+// =============================================================================
 public partial class AfsprakenPage : Page
 {
     private readonly AfspraakService _svcAfspraak = new AfspraakService();
+    // Onthoudt de laatst geselecteerde afspraak voor BtnAnnuleren_Click (id + gegevens).
     private AfspraakWeergave? _afspraakGeselecteerd;
+    // Voorkomt dubbele LaadAfspraken tijdens Page_Loaded wanneer SelectedDate programmatisch wordt gezet.
     private bool _bInitialiseert;
 
     public AfsprakenPage()
@@ -18,6 +27,9 @@ public partial class AfsprakenPage : Page
         InitializeComponent();
     }
 
+    // -------------------------------------------------------------------------
+    // Page_Loaded — start op vandaag
+    // -------------------------------------------------------------------------
     private void Page_Loaded(object sender, RoutedEventArgs e)
     {
         _bInitialiseert = true;
@@ -27,6 +39,9 @@ public partial class AfsprakenPage : Page
         WisDetail();
     }
 
+    // -------------------------------------------------------------------------
+    // CalDatum_SelectedDatesChanged — andere dag gekozen in kalender
+    // -------------------------------------------------------------------------
     private void CalDatum_SelectedDatesChanged(object sender, SelectionChangedEventArgs e)
     {
         if (_bInitialiseert || calDatum.SelectedDate == null)
@@ -38,7 +53,9 @@ public partial class AfsprakenPage : Page
         WisDetail();
     }
 
-    // Haalt afspraken op voor de ingelogde dokter en de gekozen dag.
+    // -------------------------------------------------------------------------
+    // LaadAfsprakenVoorGeselecteerdeDatum — SQL via AfspraakService.HaalAfsprakenOpDag
+    // -------------------------------------------------------------------------
     private void LaadAfsprakenVoorGeselecteerdeDatum()
     {
         if (calDatum.SelectedDate == null)
@@ -89,15 +106,26 @@ public partial class AfsprakenPage : Page
         }
     }
 
+    // Vult txtAfsprakenDatum met een volledige datum in het Nederlands (nl-BE).
     private void WerkDatumTitelBij(DateTime datum)
     {
         string strDatum = datum.ToString("dddd d MMMM yyyy", new CultureInfo("nl-BE"));
         txtAfsprakenDatum.Text = "Afspraken voor " + strDatum;
     }
 
+    // -------------------------------------------------------------------------
+    // LstAfspraken_SelectionChanged — selectie koppelen aan detailpaneel
+    // -------------------------------------------------------------------------
     private void LstAfspraken_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (lstAfspraken.SelectedItem is ListBoxItem item && item.Tag is AfspraakWeergave afspraak)
+        ListBoxItem? item = lstAfspraken.SelectedItem as ListBoxItem;
+        AfspraakWeergave? afspraak = null;
+        if (item != null && item.Tag != null)
+        {
+            afspraak = item.Tag as AfspraakWeergave;
+        }
+
+        if (afspraak != null)
         {
             _afspraakGeselecteerd = afspraak;
             ToonDetail(afspraak);
@@ -118,6 +146,7 @@ public partial class AfsprakenPage : Page
             "Klacht: " + afspraak.Klacht;
     }
 
+    // Reset selectie en detailtekst; annuleren-knop uit tot er opnieuw een rij wordt gekozen.
     private void WisDetail()
     {
         _afspraakGeselecteerd = null;
@@ -126,6 +155,10 @@ public partial class AfsprakenPage : Page
         btnAnnuleren.IsEnabled = false;
     }
 
+    // -------------------------------------------------------------------------
+    // BtnAnnuleren_Click — afspraak verwijderen na bevestiging (MessageBox)
+    // -------------------------------------------------------------------------
+    // DELETE alleen als dokter_id overeenkomt met Session.GebruikerId (in repository).
     private void BtnAnnuleren_Click(object sender, RoutedEventArgs e)
     {
         if (_afspraakGeselecteerd == null)
@@ -170,8 +203,4 @@ public partial class AfsprakenPage : Page
         }
     }
 
-    private void BtnTerugNaarStart_Click(object sender, RoutedEventArgs e)
-    {
-        NavigationService?.Navigate(new StartPage());
-    }
 }

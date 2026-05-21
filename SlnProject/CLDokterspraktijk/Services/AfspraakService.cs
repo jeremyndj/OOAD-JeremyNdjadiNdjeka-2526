@@ -3,18 +3,17 @@ using CLDokterspraktijk.Models;
 
 namespace CLDokterspraktijk.Services;
 
-// Afspraken ophalen en annuleren voor de ingelogde dokter.
+// Afspraken voor de ingelogde dokter: ophalen per dag en annuleren via repository.
 public class AfspraakService
 {
     private readonly AfspraakRepository _repoAfspraak = new AfspraakRepository();
 
-    // Lijst voor de UI: AfspraakWeergave (JOIN met Patient), niet de kale entiteit alleen.
+    // Retourneert AfspraakWeergave (afspraak + patiëntnaam uit JOIN), niet alleen entiteit Afspraak.
     public List<AfspraakWeergave> HaalAfsprakenOpDag(int iDokterId, DateTime datumDag)
     {
         return _repoAfspraak.HaalOpDag(iDokterId, datumDag);
     }
 
-    // Annuleert een afspraak (verwijdert uit de database).
     public bool Annuleer(int iAfspraakId, int iDokterId)
     {
         return _repoAfspraak.Verwijder(iAfspraakId, iDokterId);

@@ -3,7 +3,13 @@ using System.Windows.Controls;
 
 namespace WpfDokter.Views;
 
-// Startpagina: uitleg over de app en snelkoppelingen naar andere schermen.
+// =============================================================================
+// StartPage — landingspagina na inloggen
+// =============================================================================
+// Geen database-aanroepen: alleen Session.Gebruikersnaam voor welkomsttekst.
+// Biedt snelkoppelingen naar AfsprakenPage en PatientenPage (naast het vaste zijmenu).
+// NavigationService hoort bij het Frame in MainWindow; null-check voorkomt crash bij ontbrekende host.
+// =============================================================================
 public partial class StartPage : Page
 {
     public StartPage()
@@ -11,20 +17,31 @@ public partial class StartPage : Page
         InitializeComponent();
     }
 
-    // Persoonlijke welkomsttekst op basis van de sessie.
+    // -------------------------------------------------------------------------
+    // Page_Loaded — personaliseer welkomsttekst
+    // -------------------------------------------------------------------------
+    // Als Gebruikersnaam leeg is (zou niet mogen na login), tonen we generiek "dokter".
     private void Page_Loaded(object sender, RoutedEventArgs e)
     {
-        string naam = string.IsNullOrEmpty(Session.Gebruikersnaam) ? "dokter" : Session.Gebruikersnaam;
-        txtWelkom.Text = $"Welkom, {naam}";
+        string strNaam = string.IsNullOrEmpty(Session.Gebruikersnaam) ? "dokter" : Session.Gebruikersnaam;
+        txtWelkom.Text = "Welkom, " + strNaam;
     }
 
+    // Navigeert binnen hetzelfde Frame naar de afsprakenkalender van de ingelogde dokter.
     private void BtnAfspraken_Click(object sender, RoutedEventArgs e)
     {
-        NavigationService?.Navigate(new AfsprakenPage());
+        if (NavigationService != null)
+        {
+            NavigationService.Navigate(new AfsprakenPage());
+        }
     }
 
+    // Navigeert naar het patiëntenoverzicht (contactkaarten + zoeken).
     private void BtnPatienten_Click(object sender, RoutedEventArgs e)
     {
-        NavigationService?.Navigate(new PatientenPage());
+        if (NavigationService != null)
+        {
+            NavigationService.Navigate(new PatientenPage());
+        }
     }
 }

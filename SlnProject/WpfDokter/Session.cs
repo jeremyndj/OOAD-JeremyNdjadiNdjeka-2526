@@ -2,17 +2,18 @@ using CLDokterspraktijk.Models;
 
 namespace WpfDokter;
 
-// Bewaart gegevens van de ingelogde dokter tijdens de sessie.
+// Statische sessie voor de ingelogde dokter tijdens één app-run (geen database, alleen geheugen).
+// MainWindow en pages lezen hier GebruikerId en weergavenaam; bij uitloggen wordt alles gewist.
 public static class Session
 {
-    // Naam rechtsboven in MainWindow.
+    // Volledige naam in de header (voornaam + achternaam).
     public static string? Gebruikersnaam { get; set; }
-    // Profielfoto rechtsboven in MainWindow.
+    // Binaire profielfoto voor imgProfiel in MainWindow.
     public static byte[]? ProfielData { get; set; }
-    // Id van de ingelogde dokter.
+    // Primary key van Dokter; 0 betekent niet ingelogd.
     public static int GebruikerId { get; set; }
 
-    // Vult de sessie na een geslaagde login.
+    // Na geslaagde LoginService.Login: velden vullen vanuit het Dokter-object (zonder paswoord-hash).
     public static void VulVanDokter(Dokter dokter)
     {
         GebruikerId = dokter.Id;
@@ -20,7 +21,7 @@ public static class Session
         ProfielData = dokter.ProfielData;
     }
 
-    // Leegt de sessie bij uitloggen.
+    // Bij uitloggen terug naar anonieme staat zodat Window_Loaded-logica opnieuw login toont.
     public static void Wis()
     {
         Gebruikersnaam = null;

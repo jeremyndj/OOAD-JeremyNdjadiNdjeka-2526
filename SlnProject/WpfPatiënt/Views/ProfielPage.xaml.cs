@@ -2,9 +2,10 @@ using System.Windows.Controls;
 
 namespace WpfPatiënt.Views;
 
-// Profiel bewerken door de patiënt (nog uit te werken).
+// Pagina waar de patiënt eigen profielgegevens kan bekijken en wijzigen (nog uit te werken).
 public partial class ProfielPage : Page
 {
+    // Placeholder: koppeling met Patient-model en UPDATE in repository volgt later.
     public ProfielPage()
     {
         InitializeComponent();

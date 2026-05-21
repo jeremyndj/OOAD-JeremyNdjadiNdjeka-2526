@@ -4,10 +4,10 @@ using System.Windows.Media.Imaging;
 
 namespace WpfDokter;
 
-// Hulpklasse om een profielfoto in een Image-control te tonen.
+// Zet byte[] profielfoto uit de database om naar een BitmapImage op een WPF Image-control.
+// Wordt gebruikt in MainWindow-header en op patiëntenkaarten/detail.
 public static class ProfielAfbeeldingHelper
 {
-    // Zet de profielfoto op imgProfiel, of leeg als er geen data is.
     public static void LaadProfielAfbeelding(Image imgProfiel, byte[]? arrProfielData)
     {
         imgProfiel.Source = null;
@@ -17,6 +17,7 @@ public static class ProfielAfbeeldingHelper
             return;
         }
 
+        // Stream moet open blijven tot EndInit; OnLoad laadt alles in geheugen en Freeze maakt thread-safe.
         BitmapImage bmpProfiel = new BitmapImage();
         using (MemoryStream stmGeheugen = new MemoryStream(arrProfielData))
         {

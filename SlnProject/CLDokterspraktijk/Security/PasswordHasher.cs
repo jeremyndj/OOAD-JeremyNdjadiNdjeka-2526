@@ -3,10 +3,10 @@ using System.Text;
 
 namespace CLDokterspraktijk.Security;
 
-// Hasht wachtwoorden met SHA-256 (zelfde formaat als in de database).
+// Wachtwoordbeveiliging: SHA-256 over UTF-8, hex in kleine letters (zelfde formaat als seed-data in SQL).
 public static class PasswordHasher
 {
-    // Maakt een onleesbare hex-string van het wachtwoord.
+    // Gebruikt bij registratie of wachtwoord wijzigen: hash opslaan in kolom paswoord.
     public static string HashWachtwoord(string strWachtwoord)
     {
         byte[] arrBytes = SHA256.HashData(Encoding.UTF8.GetBytes(strWachtwoord));
@@ -19,7 +19,7 @@ public static class PasswordHasher
         return sbHash.ToString();
     }
 
-    // Hasht het ingevulde wachtwoord en vergelijkt met de hash uit de database.
+    // Login: ingevoerd wachtwoord hashen en vergelijken met opgeslagen hash (geen plat wachtwoord in DB).
     public static bool ControleerWachtwoord(string strWachtwoord, string strOpgeslagenHash)
     {
         string strHashIngevoerd = HashWachtwoord(strWachtwoord);

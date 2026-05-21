@@ -3,10 +3,10 @@ using Microsoft.Data.SqlClient;
 
 namespace CLDokterspraktijk.Data;
 
-// Data-access voor afspraken (alle SQL voor afspraken hoort hier).
+// SQL voor tabel Afspraak, inclusief JOIN met Patient voor namen op het scherm.
 public class AfspraakRepository
 {
-    // Haalt alle afspraken van een dokter op voor één kalenderdag (met patiëntnaam via JOIN).
+    // Alle afspraken van één dokter tussen middernacht en middernacht+1 dag.
     public List<AfspraakWeergave> HaalOpDag(int iDokterId, DateTime datumDag)
     {
         List<AfspraakWeergave> lijstAfspraken = new List<AfspraakWeergave>();
@@ -55,7 +55,23 @@ public class AfspraakRepository
         return lijstAfspraken;
     }
 
-    // Verwijdert een afspraak (annuleren); alleen als die bij de dokter hoort.
+    // Verwijdert alle afspraken van één patiënt (vóór DELETE op Patient wegens foreign key).
+    public int VerwijderAlleVanPatient(int iPatientId)
+    {
+        using (SqlConnection conn = SqlConnectionFactory.MaakVerbinding())
+        {
+            conn.Open();
+            string strSql = "DELETE FROM Afspraak WHERE patient_id = @patientId";
+
+            using (SqlCommand cmd = new SqlCommand(strSql, conn))
+            {
+                cmd.Parameters.AddWithValue("@patientId", iPatientId);
+                return cmd.ExecuteNonQuery();
+            }
+        }
+    }
+
+    // Annuleren = DELETE; alleen rijen van deze dokter (dokter_id in WHERE).
     public bool Verwijder(int iAfspraakId, int iDokterId)
     {
         using (SqlConnection conn = SqlConnectionFactory.MaakVerbinding())

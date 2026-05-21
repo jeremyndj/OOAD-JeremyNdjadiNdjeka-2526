@@ -3,10 +3,10 @@ using Microsoft.Data.SqlClient;
 
 namespace CLDokterspraktijk.Data;
 
-// Data-access voor dokters (alle SQL voor dokters hoort hier).
+// Alle SQL voor tabel Dokter. Gebruikt door LoginService om op e-mail in te loggen.
 public class DokterRepository
 {
-    // Haalt een dokter op via e-mailadres, of null als die niet bestaat.
+    // Zoekt één dokter op e-mail; null als het adres niet bestaat (geen exception).
     public Dokter? HaalOpViaEmail(string strEmail)
     {
         Dokter? dokter = null;
@@ -15,7 +15,6 @@ public class DokterRepository
         {
             conn.Open();
 
-            // Parameter @email voorkomt SQL-injectie.
             string strSql =
                 "SELECT id, voornaam, achternaam, gsm, email, paswoord, profielfotodata, rizivnummer, isgeconventioneerd " +
                 "FROM Dokter WHERE email = @email";
