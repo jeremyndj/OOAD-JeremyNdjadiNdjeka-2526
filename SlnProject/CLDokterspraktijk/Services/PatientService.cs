@@ -28,9 +28,9 @@ public class PatientService
     }
 
     public bool WerkBij(int iPatientId, string strVoornaam, string strAchternaam, int iGeslacht, DateTime datumGeboorte,
-        byte[]? arrProfielData)
+        string strGsm, int iNotificaties, byte[]? arrProfielData)
     {
-        return _repoPatient.WerkBij(iPatientId, strVoornaam, strAchternaam, iGeslacht, datumGeboorte, arrProfielData);
+        return _repoPatient.WerkBij(iPatientId, strVoornaam, strAchternaam, iGeslacht, datumGeboorte, strGsm, iNotificaties, arrProfielData);
     }
 
     // Verwijdert eerst alle afspraken van de patiënt, daarna de patiënt zelf (foreign key Afspraak → Patient).

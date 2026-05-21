@@ -1,5 +1,7 @@
 # AI-instructies — Dokterspraktijk (OOAD)
 
+**Enige bron** voor AI/Cursor-regels in deze solution. Geen aparte `.cursor/rules`- of andere instructiebestanden — alles staat hier. Agents en ontwikkelaars volgen **volledig** dit document bij elke wijziging.
+
 ## Codeconventies
 
 - Bij **string properties** in klassen geen `= string.Empty` initializer gebruiken.
@@ -70,7 +72,7 @@ private void BtnOpslaan_Click(object sender, RoutedEventArgs e)
 
 ### Scope
 
-- **Verplicht** bij: alle `.xaml.cs` (pages, MainWindow), repositories, services, security/helpers in `CLDokterspraktijk` en `WpfDokter`.
+- **Verplicht** bij: alle `.xaml.cs` (pages, MainWindow), repositories, services, security/helpers in `CLDokterspraktijk`, `WpfDokter` en **`WpfPatiënt`**.
 - Bij bestaande code die je aanpast: commentaar in deze stijl **bijwerken of aanvullen**, niet alleen nieuwe regels zonder structuur.
 
 ## Data-access

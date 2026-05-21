@@ -1,11 +1,74 @@
 <Page x:Class="WpfPatiënt.Views.AfspraakMakenPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      Title="Afspraak maken">
-    <!-- Placeholder; formulier nieuwe afspraak komt later -->
-    <Grid Margin="16">
-        <TextBlock Text="Afspraak maken"
-                   FontSize="20"
-                   FontWeight="SemiBold"/>
-    </Grid>
+      Title="Afspraak maken"
+      Loaded="Page_Loaded">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="16" MaxWidth="560">
+
+            <TextBlock Text="Nieuwe afspraak"
+                       FontSize="22"
+                       FontWeight="SemiBold"
+                       Margin="0,0,0,16"/>
+
+            <Grid Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+                           Text="Kies een dokter:"
+                           VerticalAlignment="Center"
+                           Margin="0,0,12,0"/>
+                <ComboBox x:Name="cmbDokter"
+                          Grid.Column="1"
+                          MinWidth="240"
+                          SelectionChanged="CmbDokter_SelectionChanged"/>
+            </Grid>
+
+            <StackPanel x:Name="pnlDokterKaart"
+                        Margin="0,0,0,16"
+                        Visibility="Collapsed"/>
+
+            <TextBlock Text="Kies een tijdstip:"
+                       FontSize="16"
+                       FontWeight="SemiBold"
+                       Margin="0,0,0,8"/>
+
+            <DatePicker x:Name="dpDatum"
+                        Margin="0,0,0,12"/>
+
+            <ComboBox x:Name="cmbTijd"
+                      MinWidth="120"
+                      HorizontalAlignment="Left"
+                      Margin="0,0,0,16"/>
+
+            <TextBlock Text="Reden van consultatie:"
+                       FontSize="16"
+                       FontWeight="SemiBold"
+                       Margin="0,0,0,8"/>
+
+            <TextBox x:Name="txtReden"
+                     MinHeight="80"
+                     TextWrapping="Wrap"
+                     AcceptsReturn="True"
+                     VerticalScrollBarVisibility="Auto"
+                     Padding="8,6"
+                     Margin="0,0,0,12"/>
+
+            <TextBlock x:Name="txtFout"
+                       TextWrapping="Wrap"
+                       Foreground="#C62828"
+                       FontSize="13"
+                       Visibility="Collapsed"
+                       Margin="0,0,0,12"/>
+
+            <Button x:Name="btnBevestigen"
+                    Content="Bevestigen"
+                    Padding="16,10"
+                    HorizontalAlignment="Left"
+                    Click="BtnBevestigen_Click"/>
+
+        </StackPanel>
+    </ScrollViewer>
 </Page>

@@ -1,66 +1,132 @@
-<Page x:Class="WpfDokter.Views.AfsprakenPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      Title="Afspraken"
-      Loaded="Page_Loaded">
-    <Grid Margin="16">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-
-        <!-- Links: kalender en lijst per dag -->
-        <StackPanel Grid.Row="0" Width="320" HorizontalAlignment="Left">
-            <TextBlock Text="Kies een datum"
-                       FontSize="18"
-                       FontWeight="SemiBold"
-                       Margin="0,0,0,8"/>
-            <Calendar x:Name="calDatum"
-                      Margin="0,0,0,16"
-                      SelectedDatesChanged="CalDatum_SelectedDatesChanged"/>
-
-            <TextBlock x:Name="txtAfsprakenDatum"
-                       FontSize="16"
-                       FontWeight="SemiBold"
-                       Margin="0,0,0,8"/>
-            <Border BorderBrush="#CCCCCC"
-                    BorderThickness="1"
-                    Background="#FAFAFA"
-                    MinHeight="180">
-                <ListBox x:Name="lstAfspraken"
-                         BorderThickness="0"
-                         Background="Transparent"
-                         SelectionChanged="LstAfspraken_SelectionChanged"/>
-            </Border>
-        </StackPanel>
-
-        <TextBlock Grid.Row="1"
-                   Text="Geselecteerde afspraak"
-                   FontSize="16"
-                   FontWeight="SemiBold"
-                   Margin="0,16,0,8"/>
-        <Border Grid.Row="2"
-                BorderBrush="#CCCCCC"
-                BorderThickness="1"
-                Background="#FAFAFA"
-                Padding="16"
-                MinHeight="90">
-            <TextBlock x:Name="txtDetail"
-                       TextWrapping="Wrap"
-                       FontSize="14"
-                       Foreground="#666666"
-                       Text="Selecteer een afspraak in de lijst."/>
-        </Border>
-
-        <Button x:Name="btnAnnuleren"
-                Grid.Row="3"
-                Content="Annuleren"
-                Margin="0,16,0,0"
-                Padding="16,10"
-                HorizontalAlignment="Left"
-                IsEnabled="False"
-                Click="BtnAnnuleren_Click"/>
-    </Grid>
-</Page>
+<Page x:Class="WpfDokter.Views.AfsprakenPage"
+
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+
+      Title="Afspraken"
+
+      Loaded="Page_Loaded">
+
+    <Grid Margin="16">
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="*"/>
+
+            <RowDefinition Height="Auto"/>
+
+            <RowDefinition Height="Auto"/>
+
+            <RowDefinition Height="Auto"/>
+
+        </Grid.RowDefinitions>
+
+
+
+        <!-- Links: kalender en lijst per dag -->
+
+        <StackPanel Grid.Row="0" Width="320" HorizontalAlignment="Left">
+
+            <TextBlock Text="Kies een datum"
+
+                       FontSize="18"
+
+                       FontWeight="SemiBold"
+
+                       Margin="0,0,0,8"/>
+
+            <Calendar x:Name="calDatum"
+
+                      Margin="0,0,0,16"
+
+                      SelectedDatesChanged="CalDatum_SelectedDatesChanged"/>
+
+
+
+            <TextBlock x:Name="txtAfsprakenDatum"
+
+                       FontSize="16"
+
+                       FontWeight="SemiBold"
+
+                       Margin="0,0,0,8"/>
+
+            <Border BorderBrush="#CCCCCC"
+
+                    BorderThickness="1"
+
+                    Background="#FAFAFA"
+
+                    MinHeight="180">
+
+                <ListBox x:Name="lstAfspraken"
+
+                         BorderThickness="0"
+
+                         Background="Transparent"
+
+                         SelectionChanged="LstAfspraken_SelectionChanged"/>
+
+            </Border>
+
+        </StackPanel>
+
+
+
+        <TextBlock Grid.Row="1"
+
+                   Text="Geselecteerde afspraak"
+
+                   FontSize="16"
+
+                   FontWeight="SemiBold"
+
+                   Margin="0,16,0,8"/>
+
+        <Border Grid.Row="2"
+
+                BorderBrush="#CCCCCC"
+
+                BorderThickness="1"
+
+                Background="#FAFAFA"
+
+                Padding="16"
+
+                MinHeight="90">
+
+            <TextBlock x:Name="txtDetail"
+
+                       TextWrapping="Wrap"
+
+                       FontSize="14"
+
+                       Foreground="#666666"
+
+                       Text="Selecteer een afspraak in de lijst."/>
+
+        </Border>
+
+
+
+        <Button x:Name="btnAnnuleren"
+
+                Grid.Row="3"
+
+                Content="Annuleren"
+
+                Margin="0,16,0,0"
+
+                Padding="16,10"
+
+                HorizontalAlignment="Left"
+
+                IsEnabled="False"
+
+                Click="BtnAnnuleren_Click"/>
+
+    </Grid>
+
+</Page>
+

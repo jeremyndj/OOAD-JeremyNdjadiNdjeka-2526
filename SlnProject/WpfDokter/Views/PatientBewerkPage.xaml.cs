@@ -24,6 +24,9 @@ public partial class PatientBewerkPage : Page
     private readonly PatientService _svcPatient = new PatientService();
     // Geselecteerde of geladen foto; null of lege array = geen afbeelding in database.
     private byte[]? _arrProfielData;
+    // Bij wijzigen: gsm en notificatie niet op dokterformulier; waarden uit DB behouden bij UPDATE.
+    private string _strGsmBehouden = string.Empty;
+    private int _iNotificatiesBehouden;
 
     public PatientBewerkPage(int iPatientId)
     {
@@ -61,6 +64,8 @@ public partial class PatientBewerkPage : Page
             txtAchternaam.Text = patient.Achternaam;
             dpGeboortedatum.SelectedDate = patient.Geboortedatum;
             ZetGeslachtRadioknop(patient.Geslacht);
+            _strGsmBehouden = patient.Gsm ?? string.Empty;
+            _iNotificatiesBehouden = (int)patient.NotificatieKeuze;
             _arrProfielData = patient.ProfielData;
             WerkProfielWeergaveBij();
         }
@@ -247,7 +252,8 @@ public partial class PatientBewerkPage : Page
             }
             else
             {
-                bool bGelukt = _svcPatient.WerkBij(_iPatientId, strVoornaam, strAchternaam, iGeslacht, datum, _arrProfielData);
+                bool bGelukt = _svcPatient.WerkBij(_iPatientId, strVoornaam, strAchternaam, iGeslacht, datum,
+                    _strGsmBehouden, _iNotificatiesBehouden, _arrProfielData);
                 if (!bGelukt)
                 {
                     ToonFout("De wijzigingen konden niet worden opgeslagen.");

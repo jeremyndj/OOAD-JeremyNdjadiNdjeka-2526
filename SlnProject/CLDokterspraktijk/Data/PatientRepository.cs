@@ -42,6 +42,33 @@ public class PatientRepository
         return lijst;
     }
 
+    // Zoekt één patiënt op e-mail voor login; null als het adres niet bestaat (geen exception).
+    public Patient? HaalOpViaEmail(string strEmail)
+    {
+        using (SqlConnection conn = SqlConnectionFactory.MaakVerbinding())
+        {
+            conn.Open();
+            string strSql =
+                "SELECT id, voornaam, achternaam, geslacht, gsm, email, paswoord, geboortedatum, profielfotodata, notificaties " +
+                "FROM Patient WHERE email = @email";
+
+            using (SqlCommand cmd = new SqlCommand(strSql, conn))
+            {
+                cmd.Parameters.AddWithValue("@email", strEmail);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (!reader.Read())
+                    {
+                        return null;
+                    }
+
+                    return LeesPatientMetPaswoordUitReader(reader);
+                }
+            }
+        }
+    }
+
     // Eén patiënt op id; null als id niet bestaat.
     public Patient? HaalOpId(int iPatientId)
     {
@@ -103,16 +130,16 @@ public class PatientRepository
         }
     }
 
-    // Wijzigt alleen de velden die op het dokterformulier staan (naam, geslacht, geboortedatum).
+    // Wijzigt profielgegevens van een patiënt (dokter- of patiëntformulier).
     public bool WerkBij(int iPatientId, string strVoornaam, string strAchternaam, int iGeslacht, DateTime datumGeboorte,
-        byte[]? arrProfielData)
+        string strGsm, int iNotificaties, byte[]? arrProfielData)
     {
         using (SqlConnection conn = SqlConnectionFactory.MaakVerbinding())
         {
             conn.Open();
             string strSql =
-                "UPDATE Patient SET voornaam = @voornaam, achternaam = @achternaam, geslacht = @geslacht, geboortedatum = @geboortedatum, profielfotodata = @profielfoto " +
-                "WHERE id = @id";
+                "UPDATE Patient SET voornaam = @voornaam, achternaam = @achternaam, geslacht = @geslacht, geboortedatum = @geboortedatum, " +
+                "gsm = @gsm, notificaties = @notificaties, profielfotodata = @profielfoto WHERE id = @id";
 
             using (SqlCommand cmd = new SqlCommand(strSql, conn))
             {
@@ -121,6 +148,16 @@ public class PatientRepository
                 cmd.Parameters.AddWithValue("@achternaam", strAchternaam.Trim());
                 cmd.Parameters.AddWithValue("@geslacht", iGeslacht);
                 cmd.Parameters.AddWithValue("@geboortedatum", datumGeboorte.Date);
+                if (string.IsNullOrWhiteSpace(strGsm))
+                {
+                    cmd.Parameters.AddWithValue("@gsm", DBNull.Value);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@gsm", strGsm.Trim());
+                }
+
+                cmd.Parameters.AddWithValue("@notificaties", iNotificaties);
                 VoegProfielParameterToe(cmd, arrProfielData);
 
                 int iRijen = cmd.ExecuteNonQuery();
@@ -179,6 +216,14 @@ public class PatientRepository
 
     private static Patient LeesPatientUitReader(SqlDataReader reader)
     {
+        Patient patient = LeesPatientMetPaswoordUitReader(reader);
+        patient.Paswoord = string.Empty;
+        return patient;
+    }
+
+    // Leest patiënt inclusief paswoord-hash (alleen voor HaalOpViaEmail / login).
+    private static Patient LeesPatientMetPaswoordUitReader(SqlDataReader reader)
+    {
         int iGeslacht = reader.GetInt32(reader.GetOrdinal("geslacht"));
         int iNotificaties = reader.GetInt32(reader.GetOrdinal("notificaties"));
         return new Patient
@@ -195,7 +240,7 @@ public class PatientRepository
             ProfielData = reader.IsDBNull(reader.GetOrdinal("profielfotodata"))
                 ? null
                 : (byte[])reader["profielfotodata"],
-            Paswoord = string.Empty,
+            Paswoord = reader.GetString(reader.GetOrdinal("paswoord")),
             NotificatieKeuze = (Patient.Notificaties)iNotificaties
         };
     }
