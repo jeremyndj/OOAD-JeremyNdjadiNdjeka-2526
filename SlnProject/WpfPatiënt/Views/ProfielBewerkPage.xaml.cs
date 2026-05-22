@@ -198,7 +198,16 @@ public partial class ProfielBewerkPage : Page
         else
         {
             txtProfielPlaceholder.Visibility = Visibility.Collapsed;
-            ProfielAfbeeldingHelper.LaadProfielAfbeelding(imgProfiel, _arrProfielData);
+            try
+            {
+                ProfielAfbeeldingHelper.LaadProfielAfbeelding(imgProfiel, _arrProfielData);
+            }
+            catch (Exception ex)
+            {
+                imgProfiel.Source = null;
+                txtProfielPlaceholder.Visibility = Visibility.Visible;
+                ToonFout("Profielfoto tonen is mislukt: " + ex.Message);
+            }
         }
     }
 

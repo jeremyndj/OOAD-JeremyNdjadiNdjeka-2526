@@ -1,6 +1,10 @@
 namespace CLDokterspraktijk.Models;
 
-// Basisgegevens die dokter en patiënt gemeen hebben.
+// =============================================================================
+// Gebruiker — abstracte basis voor Dokter en Patient
+// =============================================================================
+// Gemeenschappelijke kolommen uit de database; geen string.Empty property-initializers.
+// =============================================================================
 public abstract class Gebruiker
 {
     public int Id { get; set; }

@@ -1,9 +1,15 @@
 namespace WpfDokter;
 
-// Validatie van het patiëntformulier (toevoegen/wijzigen) vóór opslaan in de database.
+// =============================================================================
+// PatientFormulierValidatieHelper — formulier-validatie patiënt CRUD
+// =============================================================================
+// PatientBewerkPage: melding in txtFout; daarna PatientService voor INSERT/UPDATE.
+// =============================================================================
 public static class PatientFormulierValidatieHelper
 {
-    // Controleert voornaam, familienaam en geboortedatum; retourneert fouttekst of null.
+    // -------------------------------------------------------------------------
+    // Valideer — voornaam, achternaam, geboortedatum, geslacht
+    // -------------------------------------------------------------------------
     public static string? Valideer(string strVoornaam, string strAchternaam, DateTime? datumGeboorte, bool bGeslachtGekozen)
     {
         if (string.IsNullOrWhiteSpace(strVoornaam))

@@ -1,14 +1,26 @@
 using System.Data;
+using CLDokterspraktijk.Debug;
 using CLDokterspraktijk.Models;
 using Microsoft.Data.SqlClient;
 
 namespace CLDokterspraktijk.Data;
 
-// Alle SQL voor tabel Patient: lezen, toevoegen en basisgegevens wijzigen.
+// =============================================================================
+// PatientRepository — SQL voor tabel Patient
+// =============================================================================
+// SELECT/INSERT/UPDATE/DELETE met parameters; exceptions doorgeven naar WPF (try-catch in .xaml.cs).
+// Geen UI-meldingen; geen platte wachtwoorden in SELECT voor overzichtskaarten.
+// =============================================================================
 public class PatientRepository
 {
-    // Lijst voor dokter-overzicht; paswoord wordt niet opgehaald (veiligheid + niet nodig op kaart).
-    public List<Patient> HaalVoorOverzicht(string strZoekterm)
+    // -------------------------------------------------------------------------
+    // HaalVoorOverzicht — patiënten van één dokter (via Afspraak), met zoekfilter op naam
+    // -------------------------------------------------------------------------
+    // Geen SELECT DISTINCT op profielfotodata (image-kolom is niet vergelijkbaar in SQL Server).
+    // Unieke patiënt-ids komen uit een subquery; daarna één rij per patiënt uit Patient.
+    // Paswoord wordt niet opgehaald (veiligheid + niet nodig op de contactkaart).
+    // -------------------------------------------------------------------------
+    public List<Patient> HaalVoorOverzicht(int iDokterId, string strZoekterm)
     {
         List<Patient> lijst = new List<Patient>();
         string strZoek = strZoekterm == null ? string.Empty : strZoekterm.Trim();
@@ -18,14 +30,16 @@ public class PatientRepository
         {
             conn.Open();
             string strSql =
-                "SELECT id, voornaam, achternaam, geslacht, gsm, email, geboortedatum, profielfotodata, notificaties " +
-                "FROM Patient " +
-                "WHERE (@zoek = N'' OR voornaam LIKE @pat OR achternaam LIKE @pat " +
-                "OR (voornaam + N' ' + achternaam) LIKE @pat) " +
-                "ORDER BY achternaam, voornaam";
+                "SELECT p.id, p.voornaam, p.achternaam, p.geslacht, p.gsm, p.email, p.geboortedatum, p.profielfotodata, p.notificaties " +
+                "FROM Patient p " +
+                "WHERE p.id IN (SELECT DISTINCT a.patient_id FROM Afspraak a WHERE a.dokter_id = @dokterId) " +
+                "AND (@zoek = N'' OR p.voornaam LIKE @pat OR p.achternaam LIKE @pat " +
+                "OR (p.voornaam + N' ' + p.achternaam) LIKE @pat) " +
+                "ORDER BY p.achternaam, p.voornaam";
 
             using (SqlCommand cmd = new SqlCommand(strSql, conn))
             {
+                cmd.Parameters.AddWithValue("@dokterId", iDokterId);
                 cmd.Parameters.AddWithValue("@zoek", strZoek);
                 cmd.Parameters.AddWithValue("@pat", strPatroon);
 
@@ -50,7 +64,7 @@ public class PatientRepository
             conn.Open();
             string strSql =
                 "SELECT id, voornaam, achternaam, geslacht, gsm, email, paswoord, geboortedatum, profielfotodata, notificaties " +
-                "FROM Patient WHERE email = @email";
+                "FROM Patient WHERE LTRIM(RTRIM(email)) = LTRIM(RTRIM(@email))";
 
             using (SqlCommand cmd = new SqlCommand(strSql, conn))
             {
@@ -72,27 +86,64 @@ public class PatientRepository
     // Eén patiënt op id; null als id niet bestaat.
     public Patient? HaalOpId(int iPatientId)
     {
-        using (SqlConnection conn = SqlConnectionFactory.MaakVerbinding())
+        // #region agent log
+        DebugAgentLog.Write(
+            "PatientRepository.cs:HaalOpId",
+            "entry",
+            new { patientId = iPatientId },
+            "E");
+        // #endregion
+
+        try
         {
-            conn.Open();
-            string strSql =
-                "SELECT id, voornaam, achternaam, geslacht, gsm, email, geboortedatum, profielfotodata, notificaties " +
-                "FROM Patient WHERE id = @id";
-
-            using (SqlCommand cmd = new SqlCommand(strSql, conn))
+            using (SqlConnection conn = SqlConnectionFactory.MaakVerbinding())
             {
-                cmd.Parameters.AddWithValue("@id", iPatientId);
+                conn.Open();
+                string strSql =
+                    "SELECT id, voornaam, achternaam, geslacht, gsm, email, geboortedatum, profielfotodata, notificaties " +
+                    "FROM Patient WHERE id = @id";
 
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                using (SqlCommand cmd = new SqlCommand(strSql, conn))
                 {
-                    if (!reader.Read())
-                    {
-                        return null;
-                    }
+                    cmd.Parameters.AddWithValue("@id", iPatientId);
 
-                    return LeesPatientUitReader(reader);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (!reader.Read())
+                        {
+                            // #region agent log
+                            DebugAgentLog.Write(
+                                "PatientRepository.cs:HaalOpId",
+                                "no row",
+                                new { patientId = iPatientId },
+                                "E");
+                            // #endregion
+                            return null;
+                        }
+
+                        Patient patient = LeesPatientUitReader(reader);
+                        // #region agent log
+                        DebugAgentLog.Write(
+                            "PatientRepository.cs:HaalOpId",
+                            "success",
+                            new { patientId = iPatientId, naam = patient.Voornaam + " " + patient.Achternaam },
+                            "E");
+                        // #endregion
+                        return patient;
+                    }
                 }
             }
+        }
+        catch (Exception ex)
+        {
+            // #region agent log
+            DebugAgentLog.Write(
+                "PatientRepository.cs:HaalOpId",
+                "exception",
+                new { patientId = iPatientId, type = ex.GetType().Name, message = ex.Message },
+                "E");
+            // #endregion
+            throw;
         }
     }
 
@@ -214,19 +265,26 @@ public class PatientRepository
         }
     }
 
+    // Leest patiënt zonder paswoord-kolom (overzicht, profiel, detail).
     private static Patient LeesPatientUitReader(SqlDataReader reader)
     {
-        Patient patient = LeesPatientMetPaswoordUitReader(reader);
-        patient.Paswoord = string.Empty;
+        return LeesPatientBasisUitReader(reader);
+    }
+
+    // Leest patiënt inclusief paswoord-hash (alleen HaalOpViaEmail / login; SELECT moet paswoord bevatten).
+    private static Patient LeesPatientMetPaswoordUitReader(SqlDataReader reader)
+    {
+        Patient patient = LeesPatientBasisUitReader(reader);
+        patient.Paswoord = reader.GetString(reader.GetOrdinal("paswoord")).Trim();
         return patient;
     }
 
-    // Leest patiënt inclusief paswoord-hash (alleen voor HaalOpViaEmail / login).
-    private static Patient LeesPatientMetPaswoordUitReader(SqlDataReader reader)
+    // Gemeenschappelijke velden; geen paswoord (kolom staat niet in elke SELECT).
+    private static Patient LeesPatientBasisUitReader(SqlDataReader reader)
     {
         int iGeslacht = reader.GetInt32(reader.GetOrdinal("geslacht"));
         int iNotificaties = reader.GetInt32(reader.GetOrdinal("notificaties"));
-        return new Patient
+        Patient patient = new Patient
         {
             Id = reader.GetInt32(reader.GetOrdinal("id")),
             Voornaam = reader.GetString(reader.GetOrdinal("voornaam")),
@@ -240,8 +298,9 @@ public class PatientRepository
             ProfielData = reader.IsDBNull(reader.GetOrdinal("profielfotodata"))
                 ? null
                 : (byte[])reader["profielfotodata"],
-            Paswoord = reader.GetString(reader.GetOrdinal("paswoord")),
+            Paswoord = string.Empty,
             NotificatieKeuze = (Patient.Notificaties)iNotificaties
         };
+        return patient;
     }
 }

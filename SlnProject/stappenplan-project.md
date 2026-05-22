@@ -3,7 +3,7 @@ name: OOAD Dokterspraktijk
 overview: "Gefaseerd stappenplan: bestaande SQL Server-database alleen koppelen (geen nieuw DB-script), Core met ADO.NET, daarna WPF met login, Frame/Pages en dokter-/patiëntflows."
 todos:
   - id: phase-0-rules
-    content: AI-instructies.md uitbreiden + team/git-afspraken
+    content: AGENTS.md uitbreiden + team/git-afspraken
     status: pending
   - id: phase-1-solution
     content: Dokterspraktijk.Core toevoegen en solution-structuur (mappen)
@@ -40,7 +40,7 @@ isProject: false
 | Database     | **Bestaande SQL Server / LocalDB** — al opgemaakt door jullie; wij **alleen verbinden**                                    |
 | Schema       | Via **bestaand SQL-script** (SSMS); modellen/repositories laten we hierop aansluiten zodra script gedeeld is               |
 | Data-access  | **SQL alleen in class library** (ADO.NET: `SqlConnection`, `SqlCommand`, parameters)                                       |
-| AI-regels    | Volgen `[.github/AI-instructies.md](.github/AI-instructies.md)`; verboden technieken voeg je later toe                     |
+| AI-regels    | Volgen `[.github/AGENTS.md](.github/AGENTS.md)`; verboden technieken voeg je later toe                     |
 
 
 ```mermaid
@@ -76,7 +76,7 @@ flowchart TB
 ## Fase 0 — Afspraken en AI-instructies (vóór code)
 
 1. **Teamafspraken** vastleggen: wie doet class library, WPF-pages, connection string / testdata in bestaande DB.
-2. `**[AI-instructies.md](.github/AI-instructies.md)` uitbreiden** met vaste regels (jij levert verboden technieken aan):
+2. `**[AGENTS.md](.github/AGENTS.md)` uitbreiden** met vaste regels (jij levert verboden technieken aan):
   - SQL/ADO.NET alleen in class library
   - Geen businesslogica in code-behind (alleen UI-events die services aanroepen)
   - Lijst “Verboden technieken” (Entity Framework, Dapper, hardcoded wachtwoorden, …) — stap voor stap aanvullen
@@ -213,7 +213,7 @@ Zelfde patroon: laden bij `Loaded`, dynamisch vullen, foutmeldingen via `Message
 - Logout en opnieuw inloggen
 
 1. **Documentatie** (indien gevraagd door vak): klassendiagram, ERD, screenshots per rol.
-2. `**AI-instructies.md`** finaliseren met alle verboden technieken die de docent heeft opgegeven.
+2. `**AGENTS.md`** finaliseren met alle verboden technieken die de docent heeft opgegeven.
 
 ---
 

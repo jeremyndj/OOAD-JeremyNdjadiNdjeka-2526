@@ -171,7 +171,16 @@ public partial class AfspraakMakenPage : Page
             Margin = new Thickness(0, 0, 12, 0),
             VerticalAlignment = VerticalAlignment.Top
         };
-        ProfielAfbeeldingHelper.LaadProfielAfbeelding(imgProfiel, dokter.ProfielData);
+        try
+        {
+            ProfielAfbeeldingHelper.LaadProfielAfbeelding(imgProfiel, dokter.ProfielData);
+        }
+        catch (Exception)
+        {
+            // Eén ongeldige doktersfoto mag de dokterslijst niet blokkeren.
+            imgProfiel.Source = null;
+        }
+
         Grid.SetColumn(imgProfiel, 0);
 
         StackPanel pnlTekst = new StackPanel();

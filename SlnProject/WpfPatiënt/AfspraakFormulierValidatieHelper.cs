@@ -1,9 +1,15 @@
 namespace WpfPatiënt;
 
-// UI-validatie voor AfspraakMakenPage vóór AfspraakService.MaakAfspraak (geen database hier).
+// =============================================================================
+// AfspraakFormulierValidatieHelper — formulier-validatie nieuwe afspraak
+// =============================================================================
+// AfspraakMakenPage: txtFout; daarna AfspraakService.MaakAfspraak. int.TryParse voor tijd (framework out).
+// =============================================================================
 public static class AfspraakFormulierValidatieHelper
 {
-    // Controleert dokter, datum, tijd en reden; retourneert fouttekst of null als alles in orde is.
+    // -------------------------------------------------------------------------
+    // ValideerFormulier — dokter, datum, tijd en klacht
+    // -------------------------------------------------------------------------
     public static string? ValideerFormulier(int iDokterId, DateTime? datumGekozen, string strTijd, string strKlacht)
     {
         if (iDokterId <= 0)

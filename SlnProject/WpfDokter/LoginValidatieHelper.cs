@@ -2,10 +2,16 @@ using System.Net.Mail;
 
 namespace WpfDokter;
 
-// UI-validatie voor het loginformulier vóór aanroep van LoginService (geen database hier).
+// =============================================================================
+// LoginValidatieHelper — formulier-validatie vóór LoginService
+// =============================================================================
+// Geen SQL; fouttekst naar txtFout op LoginPage. Geen MessageBox voor validatie.
+// =============================================================================
 public static class LoginValidatieHelper
 {
-    // Controleert e-mail en wachtwoord; retourneert fouttekst of null als alles in orde is.
+    // -------------------------------------------------------------------------
+    // ValideerLoginFormulier — e-mail en wachtwoord controleren
+    // -------------------------------------------------------------------------
     public static string? ValideerLoginFormulier(string strEmail, string strWachtwoord)
     {
         if (string.IsNullOrWhiteSpace(strEmail))
@@ -26,7 +32,7 @@ public static class LoginValidatieHelper
         return null;
     }
 
-    // MailAddress gooit FormatException bij ongeldige syntax; dat vangen we op als false.
+    // MailAddress bij ongeldige syntax: FormatException → false (geen pattern matching op type).
     private static bool IsGeldigEmailadres(string strEmail)
     {
         try

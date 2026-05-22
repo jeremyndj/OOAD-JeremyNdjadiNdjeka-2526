@@ -12,6 +12,7 @@ namespace WpfDokter.Views;
 // Filter: Session.GebruikerId (dokter_id) + gekozen datum in calDatum.
 // Lijst: handmatig ListBoxItem per afspraak; volledig AfspraakWeergave-object in Tag.
 // Detail: txtDetail + annuleren-knop; annuleren = DELETE in DB na MessageBox-bevestiging.
+// Laden/annuleren-fouten in txtFout; MessageBox alleen voor ja/nee-bevestiging bij annuleren.
 // Geen data binding op ItemsSource (projectafspraak).
 // =============================================================================
 public partial class AfsprakenPage : Page
@@ -67,6 +68,7 @@ public partial class AfsprakenPage : Page
         WerkDatumTitelBij(datum);
 
         lstAfspraken.Items.Clear();
+        VerbergFout();
 
         try
         {
@@ -98,11 +100,7 @@ public partial class AfsprakenPage : Page
         }
         catch (Exception ex)
         {
-            MessageBox.Show(
-                "Afspraken laden is mislukt: " + ex.Message,
-                "Fout",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error);
+            ToonFout("Afspraken laden is mislukt: " + ex.Message);
         }
     }
 
@@ -177,16 +175,14 @@ public partial class AfsprakenPage : Page
             return;
         }
 
+        VerbergFout();
+
         try
         {
             bool bGelukt = _svcAfspraak.Annuleer(_afspraakGeselecteerd.Id, Session.GebruikerId);
             if (!bGelukt)
             {
-                MessageBox.Show(
-                    "De afspraak kon niet worden geannuleerd.",
-                    "Fout",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Warning);
+                ToonFout("De afspraak kon niet worden geannuleerd.");
                 return;
             }
 
@@ -195,12 +191,22 @@ public partial class AfsprakenPage : Page
         }
         catch (Exception ex)
         {
-            MessageBox.Show(
-                "Annuleren is mislukt: " + ex.Message,
-                "Fout",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error);
+            ToonFout("Annuleren is mislukt: " + ex.Message);
         }
+    }
+
+    // Toont een fouttekst in het rode TextBlock onder de annuleren-knop.
+    private void ToonFout(string strMelding)
+    {
+        txtFout.Text = strMelding;
+        txtFout.Visibility = Visibility.Visible;
+    }
+
+    // Verbergt txtFout vóór laden of annuleren.
+    private void VerbergFout()
+    {
+        txtFout.Visibility = Visibility.Collapsed;
+        txtFout.Text = string.Empty;
     }
 
 }

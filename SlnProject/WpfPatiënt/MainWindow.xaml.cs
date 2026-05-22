@@ -71,7 +71,7 @@ public partial class MainWindow : Window
     private void WisGebruikerInHeader()
     {
         txtGebruikersnaam.Text = "Niet ingelogd";
-        ProfielAfbeeldingHelper.LaadProfielAfbeelding(imgProfiel, null);
+        LaadHeaderProfielAfbeelding(null);
     }
 
     // -------------------------------------------------------------------------
@@ -88,7 +88,22 @@ public partial class MainWindow : Window
             txtGebruikersnaam.Text = "Patiënt";
         }
 
-        ProfielAfbeeldingHelper.LaadProfielAfbeelding(imgProfiel, Session.ProfielData);
+        LaadHeaderProfielAfbeelding(Session.ProfielData);
+    }
+
+    // -------------------------------------------------------------------------
+    // LaadHeaderProfielAfbeelding — profielfoto in header (try-catch, geen txtFout)
+    // -------------------------------------------------------------------------
+    private void LaadHeaderProfielAfbeelding(byte[]? arrProfielData)
+    {
+        try
+        {
+            ProfielAfbeeldingHelper.LaadProfielAfbeelding(imgProfiel, arrProfielData);
+        }
+        catch (Exception)
+        {
+            imgProfiel.Source = null;
+        }
     }
 
     // -------------------------------------------------------------------------

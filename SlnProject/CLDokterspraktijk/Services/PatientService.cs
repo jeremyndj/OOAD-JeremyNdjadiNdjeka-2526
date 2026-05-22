@@ -4,14 +4,20 @@ using CLDokterspraktijk.Security;
 
 namespace CLDokterspraktijk.Services;
 
-// Patiënten voor het dokter-overzicht: ophalen, toevoegen en basisgegevens wijzigen.
+// =============================================================================
+// PatientService — orchestratie patiënt-CRUD
+// =============================================================================
+// WpfDokter en WpfPatiënt roepen deze service aan; SQL blijft in PatientRepository.
+// Startwachtwoord bij nieuwe patiënt via PasswordHasher.
+// =============================================================================
 public class PatientService
 {
     private readonly PatientRepository _repoPatient = new PatientRepository();
 
-    public List<Patient> HaalVoorOverzicht(string strZoekterm)
+    // Patiënten van één dokter (via tabel Afspraak); iDokterId komt uit Session.GebruikerId in WpfDokter.
+    public List<Patient> HaalVoorOverzicht(int iDokterId, string strZoekterm)
     {
-        return _repoPatient.HaalVoorOverzicht(strZoekterm);
+        return _repoPatient.HaalVoorOverzicht(iDokterId, strZoekterm);
     }
 
     public Patient? HaalOpId(int iPatientId)

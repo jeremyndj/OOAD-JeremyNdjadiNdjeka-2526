@@ -1,6 +1,10 @@
 namespace CLDokterspraktijk.Models;
 
-// Patiënt met extra persoonlijke gegevens (komt overeen met tabel Patient).
+// =============================================================================
+// Patient — domeinmodel tabel Patient
+// =============================================================================
+// Erft Gebruiker; geslacht als string-code (0/1/2); Notificaties als enum voor UI.
+// =============================================================================
 public class Patient : Gebruiker
 {
     public enum Notificaties { Geen, Mail, Sms, Beide }

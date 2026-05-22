@@ -2,9 +2,16 @@ using CLDokterspraktijk.Models;
 
 namespace WpfPatiënt;
 
-// Vertaling van databasecodes naar leesbare tekst op profielpagina's.
+// =============================================================================
+// ProfielWeergaveHelper — databasecodes naar leesbare UI-tekst
+// =============================================================================
+// ProfielPage alleen-lezen; geslacht 0/1/2 en Notificaties-enum.
+// =============================================================================
 public static class ProfielWeergaveHelper
 {
+    // -------------------------------------------------------------------------
+    // VertaalGeslacht — code uit tabel Patient
+    // -------------------------------------------------------------------------
     public static string VertaalGeslacht(string strCode)
     {
         if (strCode == "0")
@@ -25,6 +32,9 @@ public static class ProfielWeergaveHelper
         return "Code " + strCode;
     }
 
+    // -------------------------------------------------------------------------
+    // VertaalNotificatie — enum naar Nederlandse label
+    // -------------------------------------------------------------------------
     public static string VertaalNotificatie(Patient.Notificaties notificatie)
     {
         if (notificatie == Patient.Notificaties.Geen)

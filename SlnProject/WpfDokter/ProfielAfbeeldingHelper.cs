@@ -4,10 +4,16 @@ using System.Windows.Media.Imaging;
 
 namespace WpfDokter;
 
-// Zet byte[] profielfoto uit de database om naar een BitmapImage op een WPF Image-control.
-// Wordt gebruikt in MainWindow-header en op patiëntenkaarten/detail.
+// =============================================================================
+// ProfielAfbeeldingHelper — byte[] naar WPF Image
+// =============================================================================
+// Aanroep in .xaml.cs binnen try-catch (AGENTS.md); kan exception gooien bij ongeldige bytes.
+// =============================================================================
 public static class ProfielAfbeeldingHelper
 {
+    // -------------------------------------------------------------------------
+    // LaadProfielAfbeelding — BitmapImage op imgProfiel zetten
+    // -------------------------------------------------------------------------
     public static void LaadProfielAfbeelding(Image imgProfiel, byte[]? arrProfielData)
     {
         imgProfiel.Source = null;

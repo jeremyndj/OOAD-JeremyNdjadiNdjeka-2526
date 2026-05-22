@@ -2,8 +2,11 @@ using CLDokterspraktijk.Models;
 
 namespace WpfDokter;
 
-// Statische sessie voor de ingelogde dokter tijdens één app-run (geen database, alleen geheugen).
-// MainWindow en pages lezen hier GebruikerId en weergavenaam; bij uitloggen wordt alles gewist.
+// =============================================================================
+// Session — ingelogde dokter in geheugen
+// =============================================================================
+// Geen database; VulVanDokter na login, Wis bij uitloggen. GebruikerId 0 = niet ingelogd.
+// =============================================================================
 public static class Session
 {
     // Volledige naam in de header (voornaam + achternaam).

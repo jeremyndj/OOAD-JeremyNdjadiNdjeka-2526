@@ -1,6 +1,10 @@
 namespace CLDokterspraktijk.Models;
 
-// Dokter met praktijkgegevens.
+// =============================================================================
+// Dokter — domeinmodel tabel Dokter
+// =============================================================================
+// Erft Gebruiker; Paswoord bevat hash (na login leeg gemaakt in LoginService).
+// =============================================================================
 public class Dokter : Gebruiker
 {
     // Gehasht wachtwoord uit de database (alleen gebruikt bij login).

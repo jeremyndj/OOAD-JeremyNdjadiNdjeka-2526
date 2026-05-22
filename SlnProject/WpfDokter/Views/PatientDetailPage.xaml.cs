@@ -12,6 +12,7 @@ namespace WpfDokter.Views;
 // Het patiënt-id komt via de constructor (doorgegeven bij Navigate vanaf een kaart).
 // Geen bewerkingsvelden: alleen tonen wat PatientService.HaalOpId uit SQL haalt.
 // Geslacht in de DB is int (0/1/2); in het model als string → VertaalGeslacht voor de UI.
+// SQL- en profielfoto-fouten in txtFout; geen MessageBox voor technische fouten.
 // =============================================================================
 public partial class PatientDetailPage : Page
 {
@@ -30,6 +31,8 @@ public partial class PatientDetailPage : Page
     // -------------------------------------------------------------------------
     private void Page_Loaded(object sender, RoutedEventArgs e)
     {
+        VerbergFout();
+
         try
         {
             Patient? patient = _svcPatient.HaalOpId(_iPatientId);
@@ -54,17 +57,33 @@ public partial class PatientDetailPage : Page
             txtGeslacht.Text = VertaalGeslacht(patient.Geslacht);
             txtNotificaties.Text = patient.NotificatieKeuze.ToString();
 
-            ProfielAfbeeldingHelper.LaadProfielAfbeelding(imgProfiel, patient.ProfielData);
+            try
+            {
+                ProfielAfbeeldingHelper.LaadProfielAfbeelding(imgProfiel, patient.ProfielData);
+            }
+            catch (Exception exFoto)
+            {
+                ToonFout("Profielfoto tonen is mislukt: " + exFoto.Message);
+            }
         }
         catch (Exception ex)
         {
-            // Technische fout (SQL/verbinding): MessageBox, geen inline txtFout op deze page.
-            MessageBox.Show(
-                "Gegevens laden is mislukt: " + ex.Message,
-                "Fout",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error);
+            ToonFout("Gegevens laden is mislukt: " + ex.Message);
         }
+    }
+
+    // Toont een fouttekst in het rode TextBlock onder de titel.
+    private void ToonFout(string strMelding)
+    {
+        txtFout.Text = strMelding;
+        txtFout.Visibility = Visibility.Visible;
+    }
+
+    // Verbergt txtFout bij het openen van de page.
+    private void VerbergFout()
+    {
+        txtFout.Visibility = Visibility.Collapsed;
+        txtFout.Text = string.Empty;
     }
 
     // -------------------------------------------------------------------------

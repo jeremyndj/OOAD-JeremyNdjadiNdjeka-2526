@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using CLDokterspraktijk.Debug;
 using CLDokterspraktijk.Models;
 using CLDokterspraktijk.Services;
 
@@ -10,6 +11,7 @@ namespace WpfDokter.Views;
 // PatientenPage — overzicht van alle patiënten als contactkaarten
 // =============================================================================
 // Data-flow: txtZoek → PatientService.HaalVoorOverzicht → PatientRepository (SQL LIKE op naam).
+// Technische fouten (SQL, profielfoto per kaart) via txtFout; geen MessageBox voor fouten.
 // UI wordt volledig in code opgebouwd (geen ItemsSource/data binding per projectafspraak).
 // Elke kaart heeft drie icoonknoppen; het patiënt-id zit in Button.Tag voor navigatie.
 // =============================================================================
@@ -35,7 +37,7 @@ public partial class PatientenPage : Page
     // -------------------------------------------------------------------------
     // TxtZoek_TextChanged — live filter bij elke toetsaanslag
     // -------------------------------------------------------------------------
-    // Roept VernieuwKaarten opnieuw aan; lege zoektekst = alle patiënten uit de database.
+    // Roept VernieuwKaarten opnieuw aan; lege zoektekst = alle patiënten van de ingelogde dokter (via afspraken).
     private void TxtZoek_TextChanged(object sender, TextChangedEventArgs e)
     {
         VernieuwKaarten();
@@ -44,16 +46,26 @@ public partial class PatientenPage : Page
     // -------------------------------------------------------------------------
     // VernieuwKaarten — kern: lijst ophalen en kaarten opnieuw tekenen
     // -------------------------------------------------------------------------
-    // Stappen: Children.Clear → service aanroepen → per Patient MaakContactKaart → toevoegen.
-    // Bij SQL-fout: MessageBox (technische fout laden, geen formulier-validatie).
+    // Stappen: VerbergFout → Children.Clear → service aanroepen → per Patient MaakContactKaart → toevoegen.
+    // Bij SQL-fout: ToonFout in txtFout (rood), geen MessageBox.
     private void VernieuwKaarten()
     {
+        VerbergFout();
         pnlKaarten.Children.Clear();
         string strFilter = txtZoek.Text;
 
         try
         {
-            List<Patient> lijstPatienten = _svcPatient.HaalVoorOverzicht(strFilter);
+            List<Patient> lijstPatienten = _svcPatient.HaalVoorOverzicht(Session.GebruikerId, strFilter);
+
+            // #region agent log
+            DebugAgentLog.Write(
+                "PatientenPage.xaml.cs:VernieuwKaarten",
+                "patients loaded",
+                new { count = lijstPatienten.Count, dokterId = Session.GebruikerId, filter = strFilter },
+                "D");
+            // #endregion
+
             foreach (Patient patient in lijstPatienten)
             {
                 Border brdKaart = MaakContactKaart(patient);
@@ -62,11 +74,15 @@ public partial class PatientenPage : Page
         }
         catch (Exception ex)
         {
-            MessageBox.Show(
-                "Patiënten laden is mislukt: " + ex.Message,
-                "Fout",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error);
+            // #region agent log
+            DebugAgentLog.Write(
+                "PatientenPage.xaml.cs:VernieuwKaarten",
+                "load failed",
+                new { dokterId = Session.GebruikerId, type = ex.GetType().Name, message = ex.Message },
+                "D");
+            // #endregion
+
+            ToonFout("Patiënten laden is mislukt: " + ex.Message);
         }
     }
 
@@ -103,7 +119,16 @@ public partial class PatientenPage : Page
             Margin = new Thickness(0, 0, 10, 0),
             VerticalAlignment = VerticalAlignment.Top
         };
-        ProfielAfbeeldingHelper.LaadProfielAfbeelding(imgProfiel, patient.ProfielData);
+        try
+        {
+            ProfielAfbeeldingHelper.LaadProfielAfbeelding(imgProfiel, patient.ProfielData);
+        }
+        catch (Exception)
+        {
+            // Eén ongeldige profielfoto mag de rest van het overzicht niet blokkeren.
+            imgProfiel.Source = null;
+        }
+
         Grid.SetRow(imgProfiel, 0);
         Grid.SetColumn(imgProfiel, 0);
         Grid.SetRowSpan(imgProfiel, 2);
@@ -237,6 +262,20 @@ public partial class PatientenPage : Page
         {
             NavigationService.Navigate(new PatientVerwijderPage(iId));
         }
+    }
+
+    // Toont een fouttekst in het rode TextBlock boven de kaartenlijst.
+    private void ToonFout(string strMelding)
+    {
+        txtFout.Text = strMelding;
+        txtFout.Visibility = Visibility.Visible;
+    }
+
+    // Verbergt txtFout vóór een nieuwe zoek- of laadpoging.
+    private void VerbergFout()
+    {
+        txtFout.Visibility = Visibility.Collapsed;
+        txtFout.Text = string.Empty;
     }
 
 }

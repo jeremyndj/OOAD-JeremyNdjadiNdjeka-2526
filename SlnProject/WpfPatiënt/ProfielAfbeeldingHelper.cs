@@ -4,10 +4,16 @@ using System.Windows.Media.Imaging;
 
 namespace WpfPatiënt;
 
-// Hulpklasse om een profielfoto in een Image-control te tonen.
+// =============================================================================
+// ProfielAfbeeldingHelper — byte[] naar WPF Image
+// =============================================================================
+// Aanroep in .xaml.cs binnen try-catch (AGENTS.md); kan exception gooien bij ongeldige bytes.
+// =============================================================================
 public static class ProfielAfbeeldingHelper
 {
-    // Zet de profielfoto op imgProfiel, of leeg als er geen data is.
+    // -------------------------------------------------------------------------
+    // LaadProfielAfbeelding — BitmapImage op imgProfiel zetten
+    // -------------------------------------------------------------------------
     public static void LaadProfielAfbeelding(Image imgProfiel, byte[]? arrProfielData)
     {
         imgProfiel.Source = null;

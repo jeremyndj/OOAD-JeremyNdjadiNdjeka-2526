@@ -1,6 +1,6 @@
-# AI-instructies — Dokterspraktijk (OOAD)
+# AGENTS.md — Dokterspraktijk (OOAD)
 
-**Enige bron** voor AI/Cursor-regels in deze solution. Geen aparte `.cursor/rules`- of andere instructiebestanden — alles staat hier. Agents en ontwikkelaars volgen **volledig** dit document bij elke wijziging.
+**Enige bron** voor AI/Cursor-regels in deze solution (bestand: `.github/AGENTS.md`). Geen aparte `.cursor/rules`- of andere instructiebestanden — alles staat hier. Agents en ontwikkelaars volgen **volledig** dit document bij elke wijziging.
 
 ## Codeconventies
 
@@ -43,7 +43,7 @@ Gebruik **overal** in het project (WPF code-behind, class library, helpers, serv
 ### Waar expliciet over schrijven (indien van toepassing)
 
 - Scheiding UI ↔ `CLDokterspraktijk` (geen SQL in WPF).
-- Formvalidatie: **txtFout** vs **MessageBox** (formchecking geen MessageBox, tenzij bevestiging zoals afspraak annuleren).
+- Formvalidatie en technische fouten: **txtFout** vs **MessageBox** (zie sectie **Foutafhandeling**; MessageBox alleen voor bevestigingen).
 - `Session`, `NavigationService`, `Tag` op knoppen, constructor-parameters (`id == 0` = nieuw).
 - Disabled knoppen vs verborgen menu; INSERT vs UPDATE.
 - Databasecodes (bijv. geslacht 0/1/2).
@@ -75,10 +75,23 @@ private void BtnOpslaan_Click(object sender, RoutedEventArgs e)
 - **Verplicht** bij: alle `.xaml.cs` (pages, MainWindow), repositories, services, security/helpers in `CLDokterspraktijk`, `WpfDokter` en **`WpfPatiënt`**.
 - Bij bestaande code die je aanpast: commentaar in deze stijl **bijwerken of aanvullen**, niet alleen nieuwe regels zonder structuur.
 
+## Foutafhandeling (verplicht in WPF code-behind)
+
+- Alle **database-** en **bestandssysteem**operaties (SQL via services/repositories, `File.ReadAllBytes`, `OpenFileDialog`, profielfoto laden/weergeven via `ProfielAfbeeldingHelper`) worden in **`.xaml.cs`** afgehandeld met **try-catch** op `Exception`.
+- De class library (`CLDokterspraktijk`) mag exceptions doorgeven (`throw`); **geen** gebruikersmeldingen, geen `MessageBox`, geen `txtFout` in repositories of services.
+- Foutmeldingen voor de eindgebruiker **nooit** via `MessageBox.Show` voor fouten of validatie. Gebruik op elke betrokken `Page` een `TextBlock` **`txtFout`**:
+  - `Foreground="#C62828"` (rood)
+  - `TextWrapping="Wrap"`
+  - `Visibility="Collapsed"` tot er een fout is
+  - Helpers **`ToonFout(string strMelding)`** en **`VerbergFout()`** per page; vóór een nieuwe actie of laden: `VerbergFout()`.
+- Toon **`ex.Message`** (geen stack trace naar de gebruiker).
+- **`MessageBox`** alleen voor **bevestigingen** (ja/nee), bijvoorbeeld afspraak annuleren of patiënt verwijderen — niet voor SQL-fouten, I/O-fouten of formulier-validatie.
+- Bij profielfoto op een **lijst van kaarten** (bijv. patiëntenoverzicht): fout per kaart afvangen zodat één ongeldige foto de rest van de lijst niet blokkeert (geen globale fout tenzij de hele lijst niet geladen kan worden).
+
 ## Data-access
 
 - **SQL-queries** (SELECT, INSERT, UPDATE, DELETE) horen **alleen** in de class library (`CLDokterspraktijk`), bijvoorbeeld in repositories. **Geen** SQL in WPF-projecten (geen query-strings in pages, code-behind of vensters).
-- Geen businesslogica in code-behind: alleen UI-events die services aanroepen.
+- Geen businesslogica in code-behind: UI-events roepen services aan; **formulier-validatie** mag in static `*ValidatieHelper`-klassen in het WPF-project (retourneert fouttekst voor `txtFout`).
 
 ## Verboden technieken
 

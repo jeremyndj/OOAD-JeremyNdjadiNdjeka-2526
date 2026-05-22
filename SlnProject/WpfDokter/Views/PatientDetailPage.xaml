@@ -7,6 +7,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -24,7 +25,15 @@
                    FontWeight="SemiBold"
                    Margin="0,0,0,16"/>
 
-        <Border Grid.Row="2"
+        <TextBlock x:Name="txtFout"
+                   Grid.Row="2"
+                   TextWrapping="Wrap"
+                   Foreground="#C62828"
+                   FontSize="13"
+                   Visibility="Collapsed"
+                   Margin="0,0,0,12"/>
+
+        <Border Grid.Row="3"
                 BorderBrush="#CCCCCC"
                 BorderThickness="1"
                 Background="#FAFAFA"

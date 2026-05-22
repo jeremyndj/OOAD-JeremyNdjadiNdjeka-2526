@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using CLDokterspraktijk.Debug;
 using CLDokterspraktijk.Models;
 using CLDokterspraktijk.Services;
 using WpfDokter;
@@ -48,6 +49,15 @@ public partial class LoginPage : Page
         // Stap 4: database-login via class library; exception = connection string / SQL-server.
         try
         {
+            // #region agent log
+            DebugAgentLog.Write(
+                "LoginPage.xaml.cs:BtnInloggen_Click",
+                "login poging",
+                new { email = strEmail.Trim(), wachtwoordLen = strWachtwoord.Length },
+                "B",
+                "post-fix");
+            // #endregion
+
             Dokter? dokter = _svcLogin.Login(strEmail, strWachtwoord);
             if (dokter == null)
             {
@@ -58,6 +68,15 @@ public partial class LoginPage : Page
 
             // Stap 5: sessie vullen (GebruikerId nodig voor filter op dokter_id bij afspraken).
             Session.VulVanDokter(dokter);
+
+            // #region agent log
+            DebugAgentLog.Write(
+                "LoginPage.xaml.cs:BtnInloggen_Click",
+                "login succes",
+                new { dokter.Id, dokter.Email },
+                "B",
+                "post-fix");
+            // #endregion
 
             // Stap 6: parent MainWindow activeren (menu, header, navigatie naar patiënten).
             Window? venster = Window.GetWindow(this);

@@ -1,8 +1,15 @@
 namespace WpfPatiënt;
 
-// Validatie profielbewerking vóór PatientService.WerkBij (geen database).
+// =============================================================================
+// ProfielFormulierValidatieHelper — formulier-validatie profiel bewerken
+// =============================================================================
+// ProfielBewerkPage: txtFout; daarna PatientService.WerkBij voor UPDATE.
+// =============================================================================
 public static class ProfielFormulierValidatieHelper
 {
+    // -------------------------------------------------------------------------
+    // Valideer — naam, geboortedatum, geslacht, gsm, notificatie
+    // -------------------------------------------------------------------------
     public static string? Valideer(string strVoornaam, string strAchternaam, DateTime? datumGeboorte, bool bGeslachtGekozen,
         string strGsm, bool bNotificatieGekozen)
     {

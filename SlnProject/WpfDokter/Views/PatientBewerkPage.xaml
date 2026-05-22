@@ -148,7 +148,8 @@
                 </StackPanel>
 
                 <TextBlock x:Name="txtFout"
-                           Foreground="DarkRed"
+                           Foreground="#C62828"
+                           FontSize="13"
                            TextWrapping="Wrap"
                            Margin="0,0,0,12"
                            Visibility="Collapsed"/>

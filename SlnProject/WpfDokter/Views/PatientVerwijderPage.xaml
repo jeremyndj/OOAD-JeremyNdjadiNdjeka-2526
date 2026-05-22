@@ -86,7 +86,9 @@
 
                 <TextBlock x:Name="txtFout"
 
-                           Foreground="DarkRed"
+                           Foreground="#C62828"
+
+                           FontSize="13"
 
                            TextWrapping="Wrap"
 

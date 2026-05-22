@@ -1,7 +1,11 @@
 namespace CLDokterspraktijk.Models;
 
-// Strikte 1-op-1 mapping met tabel [dbo].[Afspraak]: id, moment, klacht, patient_id, dokter_id.
-// Gebruik AfspraakWeergave voor lijsten met patiëntnaam (komt uit JOIN met Patient).
+// =============================================================================
+// Afspraak — domeinmodel tabel Afspraak
+// =============================================================================
+// 1-op-1 met kolommen id, moment, klacht, patient_id, dokter_id.
+// Voor lijsten met namen: AfspraakWeergave (JOIN in repository).
+// =============================================================================
 public class Afspraak
 {
     public int Id { get; set; }

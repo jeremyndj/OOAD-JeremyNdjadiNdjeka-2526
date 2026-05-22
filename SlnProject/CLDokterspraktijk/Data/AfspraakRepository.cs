@@ -3,7 +3,11 @@ using Microsoft.Data.SqlClient;
 
 namespace CLDokterspraktijk.Data;
 
-// SQL voor tabel Afspraak, inclusief JOIN met Patient voor namen op het scherm.
+// =============================================================================
+// AfspraakRepository — SQL voor tabel Afspraak
+// =============================================================================
+// SELECT met JOIN voor weergave; INSERT; DELETE bij annuleren. Geen UI in deze laag.
+// =============================================================================
 public class AfspraakRepository
 {
     // Alle afspraken van één dokter tussen middernacht en middernacht+1 dag.

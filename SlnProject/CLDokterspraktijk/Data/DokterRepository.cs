@@ -1,9 +1,14 @@
+using CLDokterspraktijk.Debug;
 using CLDokterspraktijk.Models;
 using Microsoft.Data.SqlClient;
 
 namespace CLDokterspraktijk.Data;
 
-// Alle SQL voor tabel Dokter. Gebruikt door LoginService om op e-mail in te loggen.
+// =============================================================================
+// DokterRepository — SQL voor tabel Dokter
+// =============================================================================
+// Login op e-mail; lijst voor patiënt-app (AfspraakMakenPage). Exceptions doorgeven naar WPF.
+// =============================================================================
 public class DokterRepository
 {
     // Zoekt één dokter op e-mail; null als het adres niet bestaat (geen exception).
@@ -11,44 +16,74 @@ public class DokterRepository
     {
         Dokter? dokter = null;
 
-        using (SqlConnection conn = SqlConnectionFactory.MaakVerbinding())
+        try
         {
-            conn.Open();
-
-            string strSql =
-                "SELECT id, voornaam, achternaam, gsm, email, paswoord, profielfotodata, rizivnummer, isgeconventioneerd " +
-                "FROM Dokter WHERE email = @email";
-
-            using (SqlCommand cmd = new SqlCommand(strSql, conn))
+            using (SqlConnection conn = SqlConnectionFactory.MaakVerbinding())
             {
-                cmd.Parameters.AddWithValue("@email", strEmail);
+                conn.Open();
 
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                string strSql =
+                    "SELECT id, voornaam, achternaam, gsm, email, paswoord, profielfotodata, rizivnummer, isgeconventioneerd " +
+                    "FROM Dokter WHERE LTRIM(RTRIM(email)) = LTRIM(RTRIM(@email))";
+
+                using (SqlCommand cmd = new SqlCommand(strSql, conn))
                 {
-                    if (reader.Read())
+                    cmd.Parameters.AddWithValue("@email", strEmail);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        dokter = new Dokter
+                        if (reader.Read())
                         {
-                            Id = reader.GetInt32(reader.GetOrdinal("id")),
-                            Voornaam = reader.GetString(reader.GetOrdinal("voornaam")),
-                            Achternaam = reader.GetString(reader.GetOrdinal("achternaam")),
-                            Gsm = reader.IsDBNull(reader.GetOrdinal("gsm"))
-                                ? string.Empty
-                                : reader.GetString(reader.GetOrdinal("gsm")).Trim(),
-                            Email = reader.GetString(reader.GetOrdinal("email")),
-                            Paswoord = reader.GetString(reader.GetOrdinal("paswoord")),
-                            ProfielData = reader.IsDBNull(reader.GetOrdinal("profielfotodata"))
-                                ? null
-                                : (byte[])reader["profielfotodata"],
-                            RizivNummer = reader.GetInt32(reader.GetOrdinal("rizivnummer")).ToString(),
-                            IsGeconventioneerd = reader.GetByte(reader.GetOrdinal("isgeconventioneerd")) != 0
-                        };
+                            dokter = new Dokter
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("id")),
+                                Voornaam = reader.GetString(reader.GetOrdinal("voornaam")),
+                                Achternaam = reader.GetString(reader.GetOrdinal("achternaam")),
+                                Gsm = reader.IsDBNull(reader.GetOrdinal("gsm"))
+                                    ? string.Empty
+                                    : reader.GetString(reader.GetOrdinal("gsm")).Trim(),
+                                Email = reader.GetString(reader.GetOrdinal("email")).Trim(),
+                                Paswoord = reader.GetString(reader.GetOrdinal("paswoord")).Trim(),
+                                ProfielData = LeesProfielBytes(reader, reader.GetOrdinal("profielfotodata")),
+                                RizivNummer = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("rizivnummer"))).ToString(),
+                                IsGeconventioneerd = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("isgeconventioneerd"))) != 0
+                            };
+                        }
                     }
                 }
             }
         }
+        catch (Exception ex)
+        {
+            // #region agent log
+            DebugAgentLog.Write(
+                "DokterRepository.cs:HaalOpViaEmail",
+                "exception",
+                new { email = strEmail, type = ex.GetType().Name, message = ex.Message },
+                "C",
+                "post-fix");
+            // #endregion
+            throw;
+        }
 
         return dokter;
+    }
+
+    // Veilig profielfoto-bytes uitlezen (image-kolom kan als byte[] of DBNull binnenkomen).
+    private static byte[]? LeesProfielBytes(SqlDataReader reader, int iOrdinal)
+    {
+        if (reader.IsDBNull(iOrdinal))
+        {
+            return null;
+        }
+
+        object objWaarde = reader.GetValue(iOrdinal);
+        if (objWaarde is byte[] arrData)
+        {
+            return arrData;
+        }
+
+        return null;
     }
 
     // Eén dokter op id voor contactkaart op Afspraak maken; null als id niet bestaat.
