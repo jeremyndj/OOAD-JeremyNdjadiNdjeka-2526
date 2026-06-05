@@ -1,0 +1,53 @@
+<Window x:Class="WpfHelpdesk.MedewerkerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Nieuw ticket aanmelden" Height="520" Width="500"
+        WindowStartupLocation="CenterScreen">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20">
+            <TextBlock Text="Nieuw ticket aanmelden"
+                       FontSize="18" FontWeight="Bold" Margin="0,0,0,15"/>
+
+            <Label Content="Titel:"/>
+            <TextBox x:Name="txtTitel" Height="25"/>
+
+            <Label Content="Type:"/>
+            <ComboBox x:Name="cmbType" Height="25"
+                      SelectionChanged="CmbType_SelectionChanged"/>
+
+            <Label x:Name="lblExtra" Content="Toestel:"/>
+            <TextBox x:Name="txtExtra" Height="25"/>
+
+            <Label Content="Prioriteit:"/>
+            <ComboBox x:Name="cmbPrioriteit" Height="25"/>
+
+            <Label Content="Uw voornaam:"/>
+            <TextBox x:Name="txtVoornaam" Height="25"/>
+
+            <Label Content="Uw achternaam:"/>
+            <TextBox x:Name="txtAchternaam" Height="25"/>
+
+            <Label Content="Uw medewerker-ID:"/>
+            <TextBox x:Name="txtMelderId" Height="25" Margin="0,0,0,8"/>
+
+            <TextBlock x:Name="txtFoutmelding"
+                       Foreground="Red" FontWeight="SemiBold"
+                       TextWrapping="Wrap" Margin="0,0,0,8"
+                       Visibility="Collapsed"/>
+
+            <TextBlock x:Name="txtSuccesmelding"
+                       Foreground="Green" FontWeight="SemiBold"
+                       TextWrapping="Wrap" Margin="0,0,0,8"
+                       Visibility="Collapsed"/>
+
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                <Button x:Name="btnRegistreer" Content="Ticket registreren"
+                        Width="150" Height="35" Margin="0,0,10,0"
+                        Click="BtnRegistreer_Click"/>
+                <Button x:Name="btnTerug" Content="Terug"
+                        Width="100" Height="35"
+                        Click="BtnTerug_Click"/>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Window>

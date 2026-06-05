@@ -1,0 +1,90 @@
+<Window x:Class="WpfHelpdesk.HelpdeskWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Helpdesk — Ticketbeheer" Height="750" Width="950"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="15">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="340"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Linkerkolom: filters + ticketlijst -->
+        <StackPanel Grid.Column="0" Margin="0,0,15,0">
+            <TextBlock Text="Helpdesk — Ticketbeheer"
+                       FontSize="18" FontWeight="Bold" Margin="0,0,0,15"/>
+
+            <Label Content="Prioriteit:"/>
+            <ComboBox x:Name="cmbFilterPrioriteit" Height="28" Margin="0,0,0,8"
+                      SelectionChanged="FilterGewijzigd"/>
+
+            <Label Content="Type:"/>
+            <ComboBox x:Name="cmbFilterType" Height="28" Margin="0,0,0,8"
+                      SelectionChanged="FilterGewijzigd"/>
+
+            <Label Content="Zoeken:"/>
+            <TextBox x:Name="txtZoeken" Height="28" Margin="0,0,0,8"/>
+
+            <Button x:Name="btnFilter" Content="Filter toepassen"
+                    Height="30" Margin="0,0,0,10"
+                    Click="BtnFilter_Click"/>
+
+            <CheckBox x:Name="chkAlleenOpen" Content="Alleen open tickets"
+                      Margin="0,0,0,12"
+                      Checked="FilterGewijzigd" Unchecked="FilterGewijzigd"/>
+
+            <Label Content="Tickets:" FontWeight="SemiBold"/>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Height="400">
+                <ListBox x:Name="lstTickets"
+                         SelectionChanged="LstTickets_SelectionChanged"/>
+            </ScrollViewer>
+
+            <Button x:Name="btnTerug" Content="Terug"
+                    Height="35" Margin="0,15,0,0"
+                    Click="BtnTerug_Click"/>
+        </StackPanel>
+
+        <!-- Rechterkolom: details + afsluiten + nieuw ticket -->
+        <StackPanel Grid.Column="1">
+            <Label Content="Details:" FontWeight="SemiBold"/>
+            <TextBox x:Name="txtDetails" Height="220"
+                     IsReadOnly="True" TextWrapping="Wrap"
+                     VerticalScrollBarVisibility="Auto"
+                     FontSize="13" Margin="0,0,0,10"/>
+
+            <Button x:Name="btnSluitAf" Content="Ticket afsluiten"
+                    Height="35" Width="160" HorizontalAlignment="Left"
+                    Margin="0,0,0,20"
+                    Click="BtnSluitAf_Click"/>
+
+            <GroupBox Header="Nieuw ticket registreren" Padding="10">
+                <StackPanel>
+                    <Label Content="Titel:"/>
+                    <TextBox x:Name="txtNieuwTitel" Height="28" Margin="0,0,0,8"/>
+
+                    <Label Content="Type:"/>
+                    <ComboBox x:Name="cmbNieuwType" Height="28" Margin="0,0,0,8"
+                              SelectionChanged="CmbNieuwType_SelectionChanged"/>
+
+                    <Label x:Name="lblNieuwExtra" Content="Toestel:"/>
+                    <TextBox x:Name="txtNieuwExtra" Height="28" Margin="0,0,0,8"/>
+
+                    <Label Content="Prioriteit:"/>
+                    <ComboBox x:Name="cmbNieuwPrioriteit" Height="28" Margin="0,0,0,8"/>
+
+                    <Label Content="Melder:"/>
+                    <ComboBox x:Name="cmbMelder" Height="28" Margin="0,0,0,12"/>
+
+                    <TextBlock x:Name="txtFoutmelding"
+                               Foreground="Red" FontWeight="SemiBold"
+                               TextWrapping="Wrap" Margin="0,0,0,8"
+                               Visibility="Collapsed"/>
+
+                    <Button x:Name="btnNieuwRegistreer" Content="Ticket registreren"
+                            Height="35" Width="160" HorizontalAlignment="Left"
+                            Click="BtnNieuwRegistreer_Click"/>
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
+    </Grid>
+</Window>
